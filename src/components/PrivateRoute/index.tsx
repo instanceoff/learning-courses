@@ -37,8 +37,8 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ path, element }) => {
   useEffect(() => {
     console.log(currentAccount);
   }, [currentAccount]);
-
-  return <Route path={path} element={element} />;
+  // <Route path={path} element={element} />
+  return currentAccount ? element : <Navigate to={path} />;
 };
 
 export default PrivateRoute;

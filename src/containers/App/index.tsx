@@ -21,8 +21,12 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <PrivateRoute path="/" element={<Courses />} />
           <Route path="/Login" element={<Login />} />
+          <Route
+            path="/"
+            element={<PrivateRoute path="/Login" element={<Courses />} />}
+          />
+          {/* <PrivateRoute path="/" element={<Courses />} /> */}
         </Routes>
       </BrowserRouter>
       <Loader />
