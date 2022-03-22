@@ -21,12 +21,10 @@ const App = () => {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/Login" element={<Login />} />
-          <Route
-            path="/"
-            element={<PrivateRoute path="/Login" element={<Courses />} />}
-          />
-          {/* <PrivateRoute path="/" element={<Courses />} /> */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<PrivateRoute />}>
+            <Route path="/courses" element={<Courses />} />
+          </Route>
         </Routes>
       </BrowserRouter>
       <Loader />

@@ -19,6 +19,7 @@ export const createAuth = async (
   try {
     dispatch(setLoading(10));
     const newAcc = await createUserWithEmailAndPassword(auth, email, password);
+    console.log(newAcc);
     dispatch(setLoading(50));
     await createAccount(newAcc.user.uid);
     dispatch(setLoading(100));
