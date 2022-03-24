@@ -1,25 +1,36 @@
 import React from 'react';
 import Card from 'components/Card';
 import Header from 'components/Header';
-import { getCourses } from 'api/course';
-import { DocumentData, QuerySnapshot } from 'firebase/firestore';
+import { collection } from 'firebase/firestore';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { firestore } from 'api/firebase';
+import Loading from 'components/Loading';
 
 const Courses = () => {
-  const courses = getCourses();
+  const [value, loading, error] = useCollection(
+    collection(firestore, 'courses'),
+  );
 
   return (
     <>
       <Header />
       <div className="flex w-screen">
         <div className="max-w-screen-lg w-fit flex col mx-auto my-5 flex-wrap">
-          {courses.forEach(doc => {
-            <Card title={doc.title} description={doc.description} />;
-          })}
-          {/* <Card title="Хуй" description="Большой и длинный" />
-          <Card title="Хуй" description="Большой и длинный" />
-          <Card title="Хуй" description="Большой и длинный" />
-          <Card title="Хуй" description="Большой и длинный" />
-          <Card title="Хуй" description="Большой и длинный" /> */}
+          {error ? (
+            <div>{error}</div>
+          ) : loading ? (
+            <Loading />
+          ) : (
+            value?.docs.map(doc => {
+              return (
+                <Card
+                  key={doc.id}
+                  title={doc.get('title')}
+                  description={doc.get('description')}
+                />
+              );
+            })
+          )}
         </div>
       </div>
     </>

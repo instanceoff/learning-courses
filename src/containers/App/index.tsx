@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
-import Test from 'containers/TestContainer';
 import Loader from 'components/Loader';
 import Login from 'containers/Login';
 import { onAuthStateChanged } from 'firebase/auth';
