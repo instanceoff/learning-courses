@@ -23,6 +23,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
             <Route path="/courses" element={<Courses />} />
+            <Route path="/" element={<Login />} />
+            <Route path="/*" element={<Login />} />
           </Route>
         </Routes>
       </BrowserRouter>
