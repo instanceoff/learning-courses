@@ -2,16 +2,21 @@ import React from 'react';
 
 type TCard = {
   title: string;
-  description: string | undefined;
+  description?: string | undefined;
+  imageURL?: string | undefined;
 };
 
-const Card: React.FC<TCard> = ({ title, description }) => {
+const Card: React.FC<TCard> = ({ title, description, imageURL }) => {
+  const defaultURL =
+    'https://images.creativemarket.com/0.1.0/ps/7321584/1820/1210/m1/fpnw/wm1/zdut39gfcqxddqons5jttihib4dbljvx7fsw8l8iey2utfggkoy5gaou4eocsubf-.jpg?1574091458&s=0b3a91eab932d1643429fb9ffe314f4d';
+
   return (
-    <div className="max-w-xs bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mx-2 my-5">
+    <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 mx-2 my-5">
       <a href="/">
         <img
-          className="rounded-t-lg"
-          src="https://bipbap.ru/wp-content/uploads/2017/04/0_7c779_5df17311_orig.jpg"
+          // w-full h-40
+          className=" rounded-t-lg object-cover"
+          src={imageURL ? imageURL : defaultURL}
           alt="Обложка курса"
         />
       </a>

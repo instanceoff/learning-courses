@@ -3,11 +3,12 @@ import Card from 'components/Card';
 import Header from 'components/Header';
 import { collection } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
+
 import { firestore } from 'api/firebase';
 import Loading from 'components/Loading';
 
 const Courses = () => {
-  const [value, loading, error] = useCollection(
+  const [courses, loading, error] = useCollection(
     collection(firestore, 'courses'),
   );
 
@@ -21,12 +22,13 @@ const Courses = () => {
           ) : loading ? (
             <Loading />
           ) : (
-            value?.docs.map(doc => {
+            courses?.docs.map(doc => {
               return (
                 <Card
                   key={doc.id}
                   title={doc.get('title')}
                   description={doc.get('description')}
+                  imageURL={doc.get('imageURL')}
                 />
               );
             })
