@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   setPersistence,
   signInWithEmailAndPassword,
+  signOut,
 } from 'firebase/auth';
 import { Firestore } from 'firebase/firestore';
 import { Dispatch } from 'redux';
@@ -44,4 +45,8 @@ export const signIn = async (
     const message = (err as Error).message;
     return { isComplete: false, answer: message };
   }
+};
+
+export const signOutUser = async () => {
+  await signOut(auth);
 };

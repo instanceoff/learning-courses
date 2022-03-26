@@ -1,12 +1,15 @@
-import { createAuth, signIn } from 'api/auth';
+import { createAuth, signIn, signOutUser } from 'api/auth';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from 'api/firebase';
 
 const regular =
   /^[_a-zA-Z0-9-]+(.[_a-zA-Z0-9-]+)@[a-zA-Z0-9-]+(.[a-zA-Z0-9-]+)(.[a-zA-Z]{2,6})$/;
 
 const Main = () => {
   const dispatch = useDispatch();
+
   const [isValid, setIsValid] = useState(false);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
@@ -23,6 +26,10 @@ const Main = () => {
   const registerHandler = async event => {
     event.preventDefault();
     await createAuth(dispatch, login, password);
+  };
+  const signOut = async event => {
+    event.preventDefault();
+    await signOutUser();
   };
 
   return (
@@ -75,6 +82,15 @@ const Main = () => {
                     }`}
                   >
                     Регистрация
+                  </button>
+                  <button
+                    disabled={!auth.currentUser}
+                    onClick={signOut}
+                    className={`duration-300 bg-white text-gray-600 w-auto px-4 py-1 rounded-xl font-mont md:text-xl ${
+                      !isValid && 'cursor-not-allowed bg-gray-300'
+                    }`}
+                  >
+                    Выход
                   </button>
                 </div>
               </form>
