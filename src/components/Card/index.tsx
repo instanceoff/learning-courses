@@ -11,7 +11,7 @@ const Card: React.FC<TCard> = ({ title, description, imageURL }) => {
     'https://images.creativemarket.com/0.1.0/ps/7321584/1820/1210/m1/fpnw/wm1/zdut39gfcqxddqons5jttihib4dbljvx7fsw8l8iey2utfggkoy5gaou4eocsubf-.jpg?1574091458&s=0b3a91eab932d1643429fb9ffe314f4d';
 
   return (
-    <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 my-2">
+    <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 m-2">
       <a href="/">
         <img
           // w-full h-40
@@ -22,7 +22,7 @@ const Card: React.FC<TCard> = ({ title, description, imageURL }) => {
       </a>
       <div className="p-5">
         <a href="/">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
             {title}
           </h5>
         </a>
