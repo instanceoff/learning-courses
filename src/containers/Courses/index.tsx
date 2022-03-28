@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import Card from 'components/Card';
 import Header from 'components/Header';
-import { collection, addDoc } from 'firebase/firestore';
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  serverTimestamp,
+} from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
 import { firestore } from 'api/firebase';
 import Loading from 'components/Loading';
 
 const Courses = () => {
-  const [courses, loading, error] = useCollection(
-    collection(firestore, 'courses'),
-  );
-
   const [courseTitle, setCourseTitle] = useState('');
+
+  const [courses, loading, error] = useCollection(
+    query(collection(firestore, 'courses'), orderBy('createdAt')),
+  );
 
   const createNewCourse = async () => {
     await addDoc(collection(firestore, 'courses'), {
       title: courseTitle,
+      createdAt: serverTimestamp(),
     });
   };
 
@@ -67,13 +74,14 @@ const Courses = () => {
                 Создать курс
               </button>
             </div>
-            <div className=" max-w-screen-lg w-fit flex justify-between flex-wrap">
+            <div className=" max-w-screen-lg w-fit flex flex-wrap">
               {error ? (
                 <div>{error}</div>
               ) : loading ? (
                 <Loading />
               ) : (
                 courses?.docs.map(doc => {
+                  console.log(doc);
                   return (
                     <Card
                       key={doc.id}
