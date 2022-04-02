@@ -74,7 +74,11 @@ const Courses = () => {
                 Создать курс
               </button>
             </div>
-            <div className=" max-w-screen-lg w-fit flex flex-wrap">
+            <div
+              className={` max-w-screen-lg flex justify-center  xl:justify-start ${
+                courses?.size === 1 && 'justify-center'
+              }  flex-wrap`}
+            >
               {error ? (
                 <div>{error}</div>
               ) : loading ? (
