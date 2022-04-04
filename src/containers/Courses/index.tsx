@@ -12,6 +12,7 @@ import { useCollection } from 'react-firebase-hooks/firestore';
 
 import { firestore } from 'api/firebase';
 import Loading from 'components/Loading';
+import Button from 'components/Button';
 
 const Courses = () => {
   const [courseTitle, setCourseTitle] = useState('');
@@ -66,13 +67,15 @@ const Courses = () => {
                 />
               </div>
 
-              <button
+              <Button title="Создать курс" onClick={createNewCourse} />
+
+              {/* <button
                 type="button"
                 className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 onClick={createNewCourse}
               >
                 Создать курс
-              </button>
+              </button> */}
             </div>
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
@@ -85,7 +88,6 @@ const Courses = () => {
                 <Loading />
               ) : (
                 courses?.docs.map(doc => {
-                  console.log(doc);
                   return (
                     <Card
                       key={doc.id}
