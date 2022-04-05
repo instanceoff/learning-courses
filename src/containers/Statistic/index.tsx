@@ -2,33 +2,6 @@ import Header from 'components/Header';
 import React, { useState } from 'react';
 
 const Statistic = () => {
-  const triggerEl = document.getElementById('dropdownDefault');
-  const targetEl = document.getElementById('dropdown');
-
-  const options = {
-    placement: 'bottom',
-    onHide: () => {
-      console.log('dropdown has been hidden');
-    },
-    onShow: () => {
-      console.log('dropdown has been shown');
-    },
-  };
-  // const dropdown = new Dropdown(targetEl, triggerEl, options);
-
-  const onClickExpand = () => {
-    // dropdown.show();
-  };
-
-  // const updateDOM = () => {
-  //   window.document.dispatchEvent(
-  //     new Event('DOMContentLoaded', {
-  //       bubbles: true,
-  //       cancelable: true,
-  //     }),
-  //   );
-  // };
-
   return (
     <>
       <Header />

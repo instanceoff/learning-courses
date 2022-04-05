@@ -3,21 +3,29 @@ import React, { useEffect } from 'react';
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 import Loader from 'components/Loader';
+import PrivateRoute from 'components/PrivateRoute';
 import Login from 'containers/Login';
+import MainCourse from 'containers/MainCourse';
 import Statistic from 'containers/Statistic';
+import Courses from 'containers/Courses';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from 'api/firebase';
+import { auth, firestore } from 'api/firebase';
 import { getAccount } from 'api/account';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentAccount } from './actions';
 import { IUser } from 'types/user';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentAccount } from './selectors';
-import Courses from 'containers/Courses';
-import PrivateRoute from 'components/PrivateRoute';
+
 import 'flowbite';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import { collection, orderBy, query } from 'firebase/firestore';
 
 const App = () => {
+  const [courses, loading, error] = useCollection(
+    query(collection(firestore, 'courses'), orderBy('createdAt')),
+  );
+
   return (
     <>
       <BrowserRouter>
@@ -28,6 +36,14 @@ const App = () => {
             <Route path="/statistic" element={<Statistic />} />
             <Route path="/" element={<Login />} />
             <Route path="/*" element={<Login />} />
+            {courses?.docs.map(doc => {
+              return (
+                <Route
+                  path={`/${doc.id}`}
+                  element={<MainCourse id={doc.id} />}
+                />
+              );
+            })}
           </Route>
         </Routes>
       </BrowserRouter>

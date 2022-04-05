@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-// import 'flowbite';
 
 const Header = () => {
+  const currentLocation = document.location.pathname;
+
   useEffect(() => {
     window.document.dispatchEvent(new Event('DOMContentLoaded'));
   }, []);
@@ -13,10 +14,7 @@ const Header = () => {
 
   return (
     <>
-      <nav
-        // onMouseEnter={updateDOM}
-        className="bg-slate-400 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded dark:bg-gray-800"
-      >
+      <nav className="bg-slate-400 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <a href="/" className="flex items-center">
             {/* <img
@@ -35,7 +33,7 @@ const Header = () => {
             aria-controls="mobile-menu"
             aria-expanded="false"
           >
-            <span className="sr-only">Open main menu</span>
+            <span className="sr-only">Открыть главное меню</span>
             <svg
               className="w-6 h-6"
               fill="currentColor"
@@ -66,8 +64,14 @@ const Header = () => {
               <li>
                 <a
                   href="/courses"
-                  className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
-                  aria-current="page"
+                  className={
+                    currentLocation === '/courses'
+                      ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
+                      : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                  }
+                  aria-current={
+                    currentLocation === '/courses' ? 'page' : undefined
+                  }
                 >
                   Курсы
                 </a>
@@ -75,7 +79,14 @@ const Header = () => {
               <li>
                 <a
                   href="/statistic"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  className={
+                    currentLocation === '/statistic'
+                      ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
+                      : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                  }
+                  aria-current={
+                    currentLocation === '/statistic' ? 'page' : undefined
+                  }
                 >
                   Статистика
                 </a>
@@ -83,7 +94,12 @@ const Header = () => {
               <li>
                 <a
                   href="#"
-                  className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                  className={
+                    currentLocation === '#'
+                      ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
+                      : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                  }
+                  aria-current={currentLocation === '#' ? 'page' : undefined}
                 >
                   О проекте
                 </a>
