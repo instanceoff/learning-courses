@@ -29,10 +29,14 @@ import {
 import Loading from 'components/Loading';
 
 const App = () => {
+  const currentPage =
+    document.location.pathname === '/'
+      ? 'login'
+      : document.location.pathname.slice(1);
   const [courses, loading, error] = useCollection(
     query(
       collection(firestore, 'courses'),
-      where(documentId(), '==', document.location.pathname.slice(1)),
+      where(documentId(), '==', currentPage),
     ),
   );
   const currentCourse = courses?.docs.find(doc => {
@@ -42,19 +46,23 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/" element={<PrivateRoute />}>
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/statistic" element={<Statistic />} />
+        {loading ? (
+          <Loading />
+        ) : (
+          <Routes>
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<Login />} />
             <Route path="/*" element={<Login />} />
-            <Route
-              path={`/${currentCourse?.id}`}
-              element={<MainCourse id={currentCourse?.id} />}
-            />
-          </Route>
-        </Routes>
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/courses" element={<Courses />} />
+              <Route path="/statistic" element={<Statistic />} />
+              <Route
+                path={`/${currentCourse?.id}`}
+                element={<MainCourse id={currentCourse?.id} />}
+              />
+            </Route>
+          </Routes>
+        )}
       </BrowserRouter>
       <Loader />
     </>
