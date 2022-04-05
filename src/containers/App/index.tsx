@@ -19,12 +19,25 @@ import { selectCurrentAccount } from './selectors';
 
 import 'flowbite';
 import { useCollection } from 'react-firebase-hooks/firestore';
-import { collection, orderBy, query } from 'firebase/firestore';
+import {
+  collection,
+  orderBy,
+  query,
+  documentId,
+  where,
+} from 'firebase/firestore';
+import Loading from 'components/Loading';
 
 const App = () => {
   const [courses, loading, error] = useCollection(
-    query(collection(firestore, 'courses'), orderBy('createdAt')),
+    query(
+      collection(firestore, 'courses'),
+      where(documentId(), '==', document.location.pathname.slice(1)),
+    ),
   );
+  const currentCourse = courses?.docs.find(doc => {
+    return doc.id === document.location.pathname.slice(1);
+  });
 
   return (
     <>
@@ -36,14 +49,10 @@ const App = () => {
             <Route path="/statistic" element={<Statistic />} />
             <Route path="/" element={<Login />} />
             <Route path="/*" element={<Login />} />
-            {courses?.docs.map(doc => {
-              return (
-                <Route
-                  path={`/${doc.id}`}
-                  element={<MainCourse id={doc.id} />}
-                />
-              );
-            })}
+            <Route
+              path={`/${currentCourse?.id}`}
+              element={<MainCourse id={currentCourse?.id} />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

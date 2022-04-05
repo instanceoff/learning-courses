@@ -2,17 +2,31 @@ import { firestore } from 'api/firebase';
 import Card from 'components/Card';
 import Header from 'components/Header';
 import Loading from 'components/Loading';
-import { collection, orderBy, query } from 'firebase/firestore';
+import {
+  collection,
+  documentId,
+  orderBy,
+  query,
+  where,
+} from 'firebase/firestore';
+import { stringify } from 'querystring';
 import React, { useState } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
-const MainCourse = id => {
-  const currentCourse = document.location.pathname;
+type TMainCourse = {
+  id?: string;
+};
 
+const MainCourse: React.FC<TMainCourse> = id => {
   const [courses, loading, error] = useCollection(
-    query(collection(firestore, 'courses'), orderBy('createdAt')),
+    query(
+      collection(firestore, 'courses'),
+      where(documentId(), '==', document.location.pathname.slice(1)),
+    ),
   );
-
+  const currentCourse = courses?.docs.find(doc => {
+    return doc.id === id.id;
+  });
   return (
     <>
       <Header />
@@ -29,19 +43,13 @@ const MainCourse = id => {
               ) : loading ? (
                 <Loading />
               ) : (
-                courses?.docs.map(doc => {
-                  if (doc.id === currentCourse)
-                    return (
-                      <Card
-                        key={doc.id}
-                        title={doc.get('title')}
-                        description={doc.get('description')}
-                        imageURL={doc.get('imageURL')}
-                        courseURL={doc.id}
-                      />
-                    );
-                  return null;
-                })
+                <Card
+                  key={currentCourse?.id}
+                  title={currentCourse?.get('title')}
+                  description={currentCourse?.get('description')}
+                  imageURL={currentCourse?.get('imageURL')}
+                  courseURL={currentCourse?.id}
+                />
               )}
             </div>
           </div>

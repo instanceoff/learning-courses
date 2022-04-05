@@ -5,7 +5,7 @@ type TCard = {
   title: string;
   description?: string | undefined;
   imageURL?: string | undefined;
-  courseURL: string;
+  courseURL?: string;
 };
 
 const Card: React.FC<TCard> = ({ title, description, imageURL, courseURL }) => {
