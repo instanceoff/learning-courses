@@ -6,6 +6,7 @@ import { ActionTypes } from './constants';
 export const initialState: ContainerState = {
   loading: null,
   currentAccount: null,
+  darkMode: false,
 };
 
 type ReducerActions = ContainerActions;
@@ -18,6 +19,10 @@ const reducers: Partial<Reducers<ReducerActions, ContainerState>> = {
   [ActionTypes.SET_CURRENT_ACCOUNT]: payload => state => ({
     ...state,
     currentAccount: payload.currentAccount,
+  }),
+  [ActionTypes.SET_DARK_MODE]: payload => state => ({
+    ...state,
+    darkMode: payload.darkMode,
   }),
 };
 

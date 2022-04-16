@@ -2,6 +2,7 @@ const colors = require('tailwindcss/colors');
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
+  darkMode: 'class',
   content: ['./src/**/*.{js,jsx,ts,tsx}', './node_modules/flowbite/**/*.js'],
   mode: 'watch',
   purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],

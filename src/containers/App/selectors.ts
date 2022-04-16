@@ -12,3 +12,6 @@ export const selectLoading = () =>
 
 export const selectCurrentAccount = () =>
   createSelector(selectGlobalDomain, substate => substate.currentAccount);
+
+export const selectDarkMode = () =>
+  createSelector(selectGlobalDomain, substate => substate.darkMode);

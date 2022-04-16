@@ -27,6 +27,8 @@ import {
   where,
 } from 'firebase/firestore';
 import Loading from 'components/Loading';
+import Register from 'containers/Register';
+import DarkMode from 'components/DarkMode';
 
 const App = () => {
   const currentPage =
@@ -46,23 +48,26 @@ const App = () => {
   return (
     <>
       <BrowserRouter>
-        {loading ? (
-          <Loading />
-        ) : (
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Login />} />
-            <Route path="/*" element={<Login />} />
-            <Route path="/" element={<PrivateRoute />}>
-              <Route path="/courses" element={<Courses />} />
-              <Route path="/statistic" element={<Statistic />} />
-              <Route
-                path={`/${currentCourse?.id}`}
-                element={<MainCourse id={currentCourse?.id} />}
-              />
-            </Route>
-          </Routes>
-        )}
+        <DarkMode>
+          {loading ? (
+            <Loading />
+          ) : (
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Login />} />
+              <Route path="/*" element={<Login />} />
+              <Route path="/" element={<PrivateRoute />}>
+                <Route path="/courses" element={<Courses />} />
+                <Route path="/statistic" element={<Statistic />} />
+                <Route
+                  path={`/${currentCourse?.id}`}
+                  element={<MainCourse id={currentCourse?.id} />}
+                />
+              </Route>
+            </Routes>
+          )}
+        </DarkMode>
       </BrowserRouter>
       <Loader />
     </>

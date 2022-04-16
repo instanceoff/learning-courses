@@ -6,6 +6,7 @@ import { IUser } from 'types/user';
 interface AppState {
   loading: number | null;
   currentAccount: IUser | null;
+  darkMode: boolean;
 }
 
 /* --- ACTIONS --- */

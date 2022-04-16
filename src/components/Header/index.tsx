@@ -1,4 +1,13 @@
-import React, { useEffect } from 'react';
+import { signOutUser } from 'api/auth';
+import Button from 'components/Button';
+import { selectDarkMode } from 'containers/App/selectors';
+import React, { Children, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+
+const stateSelector = createStructuredSelector({
+  darkMode: selectDarkMode(),
+});
 
 const Header = () => {
   const currentLocation = document.location.pathname;
@@ -12,9 +21,17 @@ const Header = () => {
   //   cancelable: true,
   // }
 
+  const { darkMode } = useSelector(stateSelector);
+
+  const signOut = async event => {
+    event.preventDefault();
+    await signOutUser();
+  };
+
   return (
     <>
-      <nav className="bg-slate-400 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded dark:bg-gray-800">
+      {/* <div className={`${darkMode && 'dark'}`}> */}
+      <nav className=" bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-lg  dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <a href="/" className="flex items-center">
             {/* <img
@@ -60,7 +77,7 @@ const Header = () => {
             </svg>
           </button>
           <div className="hidden w-full md:block md:w-auto" id="mobile-menu">
-            <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+            <ul className="flex flex-col items-center mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
               <li>
                 <a
                   href="/courses"
@@ -104,10 +121,14 @@ const Header = () => {
                   О проекте
                 </a>
               </li>
+              <li>
+                <Button onClick={signOut} title={'Выход'} />
+              </li>
             </ul>
           </div>
         </div>
       </nav>
+      {/* </div> */}
     </>
   );
 };

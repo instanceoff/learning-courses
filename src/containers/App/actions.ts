@@ -7,3 +7,6 @@ export const setLoading = (percent: number | null) =>
 
 export const setCurrentAccount = (currentAccount: IUser) =>
   action(ActionTypes.SET_CURRENT_ACCOUNT, { currentAccount });
+
+export const setDarkMode = (darkMode: boolean) =>
+  action(ActionTypes.SET_DARK_MODE, { darkMode });
