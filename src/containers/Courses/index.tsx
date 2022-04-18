@@ -7,12 +7,14 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  doc,
 } from 'firebase/firestore';
 import { useCollection } from 'react-firebase-hooks/firestore';
 
 import { firestore } from 'api/firebase';
 import Loading from 'components/Loading';
 import Button from 'components/Button';
+import { ITask } from 'types/course';
 
 const Courses = () => {
   const [courseTitle, setCourseTitle] = useState('');

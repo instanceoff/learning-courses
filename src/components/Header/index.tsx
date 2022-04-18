@@ -31,7 +31,7 @@ const Header = () => {
   return (
     <>
       {/* <div className={`${darkMode && 'dark'}`}> */}
-      <nav className=" bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-lg  dark:bg-gray-800">
+      <nav className=" bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-b-lg dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <a href="/" className="flex items-center">
             {/* <img
