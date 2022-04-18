@@ -36,9 +36,15 @@ const MainCourse: React.FC<TMainCourse> = id => {
 
   const [curCourse] = useDocument(currentCourseRef);
 
-  const [tasks, loading, error] = useCollection(
+  const [tasks, tasksLoading, tasksError] = useCollection(
     query(
       collection(firestore, 'tasks'),
+      where('course', '==', currentCourseRef),
+    ),
+  );
+  const [materials, materialsLoading, materialsError] = useCollection(
+    query(
+      collection(firestore, 'materials'),
       where('course', '==', currentCourseRef),
     ),
   );
@@ -68,7 +74,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
     <>
       <Header />
       <div className="flex flex-col mx-2">
-        <div className="mx-auto rounded-lg bg-slate-300 mt-5 p-3">
+        <div className="mx-auto rounded-lg bg-slate-300 dark:bg-slate-600 mt-5 p-3">
           <div className="w-fit flex-col">
             <div className="flex mb-2 max-h-10">
               <div className=" xl:w-96 flex">
@@ -107,23 +113,26 @@ const MainCourse: React.FC<TMainCourse> = id => {
                 tasks?.size === 1 && 'justify-center'
               }  flex-wrap`}
             >
-              {error ? (
-                <div>{error}</div>
-              ) : loading ? (
+              {materialsError ? (
+                <div>{materialsError}</div>
+              ) : materialsLoading ? (
                 <Loading />
               ) : (
-                <MaterialsCard
-                  key={currentCourseRef?.id}
-                  title={curCourse?.get('title')}
-                  description={curCourse?.get('description')}
-                  imageURL={curCourse?.get('imageURL')}
-                  materialURL={currentCourseRef?.id}
-                />
+                materials?.docs.map(material => {
+                  return (
+                    <MaterialsCard
+                      key={material?.id}
+                      title={material?.get('title')}
+                      description={material?.get('description')}
+                      course={currentCourseRef}
+                    />
+                  );
+                })
               )}
             </div>
           </div>
         </div>
-        <div className="mx-auto rounded-lg bg-slate-300 my-3 p-3">
+        <div className="mx-auto rounded-lg bg-slate-300 dark:bg-slate-600 my-3 p-3">
           <div className="flex mb-2 max-h-10">
             <div className=" xl:w-96 flex">
               <input
@@ -162,9 +171,9 @@ const MainCourse: React.FC<TMainCourse> = id => {
                 tasks?.size === 1 && 'justify-center'
               }  flex-wrap`}
             >
-              {error ? (
-                <div>{error}</div>
-              ) : loading ? (
+              {tasksError ? (
+                <div>{tasksError}</div>
+              ) : tasksLoading ? (
                 <Loading />
               ) : (
                 tasks?.docs.map(task => {

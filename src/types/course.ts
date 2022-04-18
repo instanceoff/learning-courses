@@ -20,12 +20,14 @@ export interface ICourse {
   description: string;
   imageUrl?: string;
   groups?: string[];
-  teachers?: IUser[];
+  teachers?: DocumentReference<DocumentData>[];
 }
 
 export interface IDecision {
-  user: DocumentReference<DocumentData>;
   course: DocumentReference<DocumentData>;
   task: DocumentReference<DocumentData>;
-  answer: string;
+  user: DocumentReference<DocumentData>;
+
+  answer?: string;
+  answerFile?: string;
 }

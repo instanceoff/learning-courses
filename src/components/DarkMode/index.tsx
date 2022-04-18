@@ -12,10 +12,6 @@ type darkMode = {
 };
 
 const Header: React.FC<darkMode> = props => {
-  useEffect(() => {
-    window.document.dispatchEvent(new Event('DOMContentLoaded'));
-  }, []);
-
   const { darkMode } = useSelector(stateSelector);
   return (
     <>
