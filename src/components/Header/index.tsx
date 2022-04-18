@@ -19,6 +19,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const { darkMode } = useSelector(stateSelector);
   const darkModeToggle = () => {
+    localStorage.setItem('darkMode', JSON.stringify(!darkMode));
     dispatch(setDarkMode(!darkMode));
   };
 
