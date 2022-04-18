@@ -34,7 +34,7 @@ const Courses = () => {
     <>
       <Header />
       <div className="flex mx-2">
-        <div className="mx-auto rounded-lg bg-slate-300 dark:bg-gray-600 my-5 p-3">
+        <div className="mx-auto rounded-lg bg-slate-100 dark:bg-gray-800 my-5 p-3">
           <div className="w-fit flex-col">
             <div className="flex mb-2 max-h-10">
               <div className=" xl:w-96 flex">

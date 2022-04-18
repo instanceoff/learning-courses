@@ -24,16 +24,8 @@ const Main = () => {
 
   const loginHandler = async event => {
     event.preventDefault();
-    await signIn(dispatch, login, password);
-  };
-
-  const registerHandler = async event => {
-    event.preventDefault();
-    await createAuth(dispatch, login, password);
-  };
-  const signOut = async event => {
-    event.preventDefault();
-    await signOutUser();
+    const signInn = await signIn(dispatch, login, password);
+    signInn.isComplete && window.open('courses');
   };
 
   return (

@@ -74,7 +74,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
     <>
       <Header />
       <div className="flex flex-col mx-2">
-        <div className="mx-auto rounded-lg bg-slate-300 dark:bg-slate-600 mt-5 p-3">
+        <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
           <div className="w-fit flex-col">
             <div className="flex mb-2 max-h-10">
               <div className=" xl:w-96 flex">
@@ -132,7 +132,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
             </div>
           </div>
         </div>
-        <div className="mx-auto rounded-lg bg-slate-300 dark:bg-slate-600 my-3 p-3">
+        <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800  my-3 p-3">
           <div className="flex mb-2 max-h-10">
             <div className=" xl:w-96 flex">
               <input
