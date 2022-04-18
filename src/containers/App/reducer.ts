@@ -3,10 +3,12 @@ import { Reducers, Reducer } from 'types/reducers';
 import { ContainerState, ContainerActions } from './types';
 import { ActionTypes } from './constants';
 
+const isDarkMode = localStorage.getItem('darkMode');
+
 export const initialState: ContainerState = {
   loading: null,
   currentAccount: null,
-  darkMode: false,
+  darkMode: JSON.parse(isDarkMode || 'false'),
 };
 
 type ReducerActions = ContainerActions;
