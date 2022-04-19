@@ -1,4 +1,6 @@
+import Button from 'components/Button';
 import Header from 'components/Header';
+import ModalTask from 'components/ModalTask';
 import React, { useState } from 'react';
 
 const Statistic = () => {
@@ -79,6 +81,8 @@ const Statistic = () => {
               </div>
             </div>
           </div>
+          <Button title="Открыть задание" modalId="test" />
+          <ModalTask id="test" title="gfdsgsd" description="sfafgsafasf" />
         </div>
       </div>
     </>

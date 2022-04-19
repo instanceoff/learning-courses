@@ -2,12 +2,7 @@ import Button from 'components/Button';
 import React from 'react';
 import { ITask } from 'types/course';
 
-const TaskCard: React.FC<ITask> = ({
-  title,
-  description,
-  course,
-  imageUrl,
-}) => {
+const TaskCard: React.FC<ITask> = ({ title, description, course }) => {
   const defaultURL =
     'https://images.creativemarket.com/0.1.0/ps/7321584/1820/1210/m1/fpnw/wm1/zdut39gfcqxddqons5jttihib4dbljvx7fsw8l8iey2utfggkoy5gaou4eocsubf-.jpg?1574091458&s=0b3a91eab932d1643429fb9ffe314f4d';
 

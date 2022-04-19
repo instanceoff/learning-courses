@@ -53,7 +53,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
     course: currentCourseRef,
     title: taskTitle,
     description: '',
-    imageUrl: [],
+    id: '',
   };
 
   const createNewTask = async () => {
@@ -179,6 +179,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
                 tasks?.docs.map(task => {
                   return (
                     <TaskCard
+                      id={task.id}
                       key={task.id}
                       title={task.get('title')}
                       description={task.get('description')}

@@ -2,10 +2,12 @@ import { DocumentData, DocumentReference } from 'firebase/firestore';
 import { IUser } from './user';
 
 export interface ITask {
-  course: DocumentReference<DocumentData>;
+  id: string;
+  course?: DocumentReference<DocumentData>;
   title: string;
-  description?: string;
-  imageUrl?: string[];
+  description: string;
+  files?: string[];
+  multiply?: boolean;
 }
 
 export interface IMaterial {
@@ -27,7 +29,6 @@ export interface IDecision {
   course: DocumentReference<DocumentData>;
   task: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
-
   answer?: string;
   answerFile?: string;
 }
