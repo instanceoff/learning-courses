@@ -1,8 +1,19 @@
 import Button from 'components/Button';
+import ModalTask from 'components/ModalTask';
 import React from 'react';
 import { ITask } from 'types/course';
 
-const TaskCard: React.FC<ITask> = ({ title, description, course }) => {
+const TaskCard: React.FC<ITask> = ({
+  id,
+  title,
+  description,
+  course,
+  answer,
+  files,
+  addFiles,
+  multiply,
+  onClick,
+}) => {
   const defaultURL =
     'https://images.creativemarket.com/0.1.0/ps/7321584/1820/1210/m1/fpnw/wm1/zdut39gfcqxddqons5jttihib4dbljvx7fsw8l8iey2utfggkoy5gaou4eocsubf-.jpg?1574091458&s=0b3a91eab932d1643429fb9ffe314f4d';
 
@@ -22,10 +33,20 @@ const TaskCard: React.FC<ITask> = ({ title, description, course }) => {
             {title}
           </h5>
         </a>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+        {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
           {description ? description : 'Описание отсутствует'}
-        </p>
-        <Button title="Открыть задание" href="#" />
+        </p> */}
+        {/* <Button title="Открыть задание" href="#" /> */}
+        <Button title="Открыть задание" modalId={id} />
+        <ModalTask
+          id={id}
+          title={title}
+          answer={answer}
+          addFiles={addFiles}
+          description={description}
+          course={course}
+          onClick={onClick}
+        />
       </div>
     </div>
   );

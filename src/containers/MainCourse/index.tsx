@@ -22,6 +22,8 @@ import {
 import TaskCard from 'components/TaskCard';
 import Button from 'components/Button';
 import { IMaterial, ITask } from 'types/course';
+import ModalTask from 'components/ModalTask';
+import ModalCreateTask from 'components/ModalCreateTask';
 
 type TMainCourse = {
   id?: string;
@@ -56,8 +58,8 @@ const MainCourse: React.FC<TMainCourse> = id => {
     id: '',
   };
 
-  const createNewTask = async () => {
-    await addDoc(collection(firestore, 'tasks'), newTask);
+  const createNewTask = async task => {
+    await addDoc(collection(firestore, 'tasks'), task);
   };
 
   const newMaterial: IMaterial = {
@@ -77,35 +79,6 @@ const MainCourse: React.FC<TMainCourse> = id => {
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
           <div className="w-fit flex-col">
             <div className="flex mb-2 max-h-10">
-              <div className=" xl:w-96 flex">
-                <input
-                  type="text"
-                  className="
-        form-control
-        block
-        w-full
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-gray-700
-        bg-white bg-clip-padding
-        border border-solid border-gray-300
-        rounded
-        transition
-        ease-in-out
-        m-0
-        ml-2
-        mr-5
-        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
-      "
-                  id="courseTitleInput"
-                  placeholder="Наименование материала"
-                  onChange={e => {
-                    setMaterialTitle(e.target.value);
-                  }}
-                />
-              </div>
               <Button title="Создать материал" onClick={createNewMaterial} />
             </div>
             <div
@@ -134,36 +107,13 @@ const MainCourse: React.FC<TMainCourse> = id => {
         </div>
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800  my-3 p-3">
           <div className="flex mb-2 max-h-10">
-            <div className=" xl:w-96 flex">
-              <input
-                type="text"
-                className="
-        form-control
-        block
-        w-full
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-gray-700
-        bg-white bg-clip-padding
-        border border-solid border-gray-300
-        rounded
-        transition
-        ease-in-out
-        m-0
-        ml-2
-        mr-5
-        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
-      "
-                id="courseTitleInput"
-                placeholder="Наименование задания"
-                onChange={e => {
-                  setTaskTitle(e.target.value);
-                }}
-              />
-            </div>
-            <Button title="Создать задание" onClick={createNewTask} />
+            <Button title="Добавить задание" modalId="addTask" />
+            <ModalCreateTask
+              id={'addTask'}
+              title={'Добавить задание'}
+              onClick={createNewTask}
+              course={currentCourseRef}
+            />
           </div>
           <div className="w-fit flex-col">
             <div
@@ -178,13 +128,17 @@ const MainCourse: React.FC<TMainCourse> = id => {
               ) : (
                 tasks?.docs.map(task => {
                   return (
-                    <TaskCard
-                      id={task.id}
-                      key={task.id}
-                      title={task.get('title')}
-                      description={task.get('description')}
-                      course={currentCourseRef}
-                    />
+                    <>
+                      <TaskCard
+                        key={task.id}
+                        id={task.id}
+                        answer={task.get('answer')}
+                        addFiles={task.get('addFiles')}
+                        title={task.get('title')}
+                        description={task.get('description')}
+                        course={currentCourseRef}
+                      />
+                    </>
                   );
                 })
               )}

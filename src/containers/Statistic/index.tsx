@@ -81,8 +81,6 @@ const Statistic = () => {
               </div>
             </div>
           </div>
-          <Button title="Открыть задание" modalId="test" />
-          <ModalTask id="test" title="gfdsgsd" description="sfafgsafasf" />
         </div>
       </div>
     </>

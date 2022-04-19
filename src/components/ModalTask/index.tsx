@@ -1,8 +1,8 @@
 import { storage } from 'api/firebase';
 import { ref, uploadBytes } from 'firebase/storage';
 import { title } from 'process';
-import React, { MouseEventHandler, useState } from 'react';
-import { ITask } from 'types/course';
+import React, { MouseEventHandler, useEffect, useState } from 'react';
+import { IModal, ITask } from 'types/course';
 
 const ModalTask: React.FC<ITask> = ({
   id,
@@ -11,7 +11,14 @@ const ModalTask: React.FC<ITask> = ({
   files,
   course,
   multiply,
+  addFiles,
+  answer,
+  children,
+  onClick,
 }) => {
+  useEffect(() => {
+    window.document.dispatchEvent(new Event('DOMContentLoaded'));
+  }, []);
   const [file, setFile] = useState('');
   const filePath = 'user/task/fileName';
 
@@ -62,39 +69,45 @@ const ModalTask: React.FC<ITask> = ({
           </div>
           {/* <!-- Modal body --> */}
           <div className="p-6 space-y-6">
-            <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-              {description}
-            </p>
+            {description && (
+              <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                {description}
+              </p>
+            )}
 
-            <div>
-              <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                htmlFor="user_avatar"
-              >
-                Загрузить файл
-              </label>
-              <input
-                className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                aria-describedby="user_avatar_help"
-                id="user_avatar"
-                type="file"
-                onChange={e => fileHandler(e.target.files)}
-              />
-            </div>
-            <div>
-              <label
-                htmlFor="message"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
-              >
-                Ответ
-              </label>
-              <textarea
-                id="message"
-                rows={4}
-                className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="Ваш ответ..."
-              ></textarea>
-            </div>
+            {addFiles && (
+              <div>
+                <label
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                  htmlFor="user_avatar"
+                >
+                  Загрузить файл
+                </label>
+                <input
+                  className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  aria-describedby="user_avatar_help"
+                  id="user_avatar"
+                  type="file"
+                  onChange={e => fileHandler(e.target.files)}
+                />
+              </div>
+            )}
+            {answer && (
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+                >
+                  Ответ
+                </label>
+                <textarea
+                  id="message"
+                  rows={4}
+                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Ваш ответ..."
+                ></textarea>
+              </div>
+            )}
           </div>
           {/* <!-- Modal footer --> */}
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
@@ -102,7 +115,7 @@ const ModalTask: React.FC<ITask> = ({
               data-modal-toggle={id}
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={filePush}
+              onClick={onClick}
             >
               Отправить
             </button>

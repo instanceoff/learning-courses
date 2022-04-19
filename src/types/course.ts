@@ -1,13 +1,27 @@
 import { DocumentData, DocumentReference } from 'firebase/firestore';
+import { MouseEventHandler } from 'react';
 import { IUser } from './user';
 
-export interface ITask {
+export interface IModal {
   id: string;
-  course?: DocumentReference<DocumentData>;
   title: string;
   description: string;
+  course?: DocumentReference<DocumentData>;
   files?: string[];
   multiply?: boolean;
+}
+
+export interface ITask {
+  uRef?: DocumentReference<DocumentData>;
+  id: string;
+  title: string;
+  description?: string;
+  course: DocumentReference<DocumentData>;
+  addFiles?: boolean;
+  multiply?: boolean;
+  files?: boolean;
+  answer?: boolean;
+  onClick?: (task: any) => Promise<void>;
 }
 
 export interface IMaterial {
