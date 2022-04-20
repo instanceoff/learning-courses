@@ -25,6 +25,7 @@ import { IMaterial, ITask } from 'types/course';
 import ModalTask from 'components/ModalTask';
 import ModalCreateTask from 'components/ModalCreateTask';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { addDocument, addMaterials } from 'api/document';
 
 type TMainCourse = {
   id?: string;
@@ -58,9 +59,9 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   //   id: '',
   // };
 
-  const createNewTask = async task => {
-    await addDoc(collection(firestore, 'tasks'), task);
-  };
+  // const createNewTask = async task => {
+  //   await addDoc(collection(firestore, 'tasks'), task);
+  // };
 
   // const [downloadUrl, setDownloadUrl] = useState('');
 
@@ -77,26 +78,26 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
     },
   };
 
-  const [file, setFile] = useState(initialFileList);
+  const [files, setFiles] = useState(initialFileList);
 
-  const filePush = async () => {
-    if (file.length > 0) {
-      const fileRef = await ref(
-        storage,
-        `materials/${currentCourseRef.id}/${file[0].name}`,
-      );
-      await uploadBytes(fileRef, file[0]).then(snapshot => {
-        console.log('Файл загружен');
-      });
-      const downloadUrl = await getDownloadURL(fileRef);
-      await addDoc(collection(firestore, 'materials'), {
-        course: currentCourseRef,
-        title: file[0].name,
-        filePath: `materials/${currentCourseRef.id}/${file[0].name}`,
-        downloadUrl: downloadUrl,
-      });
-    }
-  };
+  // const filePush = async () => {
+  //   if (files.length > 0) {
+  //     for (let i = 0; i < files.length; i++) {
+  //       const fileRef = await ref(
+  //         storage,
+  //         `materials/${currentCourseRef.id}/${files[i].name}`,
+  //       );
+  //       await uploadBytes(fileRef, files[i]);
+  //       const downloadUrl = await getDownloadURL(fileRef);
+  //       await addDoc(collection(firestore, 'materials'), {
+  //         course: currentCourseRef,
+  //         title: files[i].name,
+  //         filePath: `materials/${currentCourseRef.id}/${files[i].name}`,
+  //         downloadUrl: downloadUrl,
+  //       });
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -111,11 +112,17 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
                   aria-describedby="user_avatar_help"
                   id="material_input"
                   type="file"
-                  onChange={e => setFile(e.target.files!)}
+                  onChange={e => setFiles(e.target.files!)}
+                  multiple
                 />
               </div>
 
-              <Button title="Добавить материал" onClick={filePush} />
+              <Button
+                title="Добавить материал"
+                onClick={e =>
+                  addMaterials(currentCourseRef, files, 'materials')
+                }
+              />
             </div>
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
@@ -130,7 +137,7 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
                 materials?.docs.map(material => {
                   return (
                     <MaterialsCard
-                      uRef={doc(firestore, 'materials', material.id)}
+                      uRef={material.ref}
                       id={material.id}
                       key={material?.id}
                       title={material?.get('title')}
@@ -150,7 +157,7 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
             <ModalCreateTask
               id={'addTask'}
               title={'Добавить задание'}
-              onClick={createNewTask}
+              // onClick={addDocument}
               course={currentCourseRef}
             />
           </div>
@@ -169,7 +176,7 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
                   return (
                     <>
                       <TaskCard
-                        uRef={doc(firestore, 'tasks', task.id)}
+                        uRef={task.ref}
                         key={task.id}
                         id={task.id}
                         answer={task.get('answer')}

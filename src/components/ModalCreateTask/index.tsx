@@ -1,3 +1,4 @@
+import { addDocument, addTask } from 'api/document';
 import { storage } from 'api/firebase';
 import Courses from 'containers/Courses';
 import { DocumentReference, DocumentData } from 'firebase/firestore';
@@ -40,7 +41,7 @@ const CheckBoxVariant: React.FC<CheckBox> = ({ title, onChange }) => {
 type ModalCreate = {
   id: string;
   title: string;
-  onClick: (task: any) => Promise<void>;
+  onClick?: (task: any) => Promise<void>;
   course: DocumentReference<DocumentData>;
 };
 
@@ -53,7 +54,15 @@ const ModalTask: React.FC<ModalCreate> = ({ id, title, onClick, course }) => {
   const [description, setDescription] = useState('');
   const [answer, setAnswer] = useState(false);
   const [file, setFile] = useState(false);
-  const [files, setFiles] = useState(false);
+
+  const initialFileList: FileList = {
+    length: 0,
+    item: function (index: number): File | null {
+      throw new Error('Function not implemented.');
+    },
+  };
+
+  const [files, setFiles] = useState(initialFileList);
   const filePath = 'user/task/fileName';
 
   const fileHandler = addedFiles => {
@@ -61,12 +70,12 @@ const ModalTask: React.FC<ModalCreate> = ({ id, title, onClick, course }) => {
     return addedFiles;
   };
 
-  // const filePush = () => {
-  //   const fileRef = ref(storage, `user/${file}`);
-  //   uploadBytes(fileRef, fileHandler[0]).then(snapshot => {
-  //     console.log('Файл загружен');
-  //   });
-  // };
+  const filePush = () => {
+    const fileRef = ref(storage, `user/${file}`);
+    uploadBytes(fileRef, fileHandler[0]).then(snapshot => {
+      console.log('Файл загружен');
+    });
+  };
 
   return (
     <div
@@ -138,7 +147,7 @@ const ModalTask: React.FC<ModalCreate> = ({ id, title, onClick, course }) => {
                 aria-describedby="user_avatar_help"
                 id="user_avatar"
                 type="file"
-                onChange={e => fileHandler(e.target.files)}
+                onChange={e => setFiles(e.target.files!)}
                 multiple
               />
             </div>
@@ -160,14 +169,23 @@ const ModalTask: React.FC<ModalCreate> = ({ id, title, onClick, course }) => {
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               onClick={e => {
-                onClick({
-                  id: id,
-                  title: name,
-                  description: description,
-                  addFiles: file,
-                  answer: answer,
-                  course: course,
-                });
+                addTask(
+                  course,
+                  name,
+                  description,
+                  'tasks',
+                  answer,
+                  file,
+                  files,
+                );
+                // addDocument('tasks', {
+                //   id: id,
+                //   title: name,
+                //   description: description,
+                //   addFiles: file,
+                //   answer: answer,
+                //   course: course,
+                // });
               }}
             >
               Создать задание

@@ -19,7 +19,7 @@ export interface ITask {
   course: DocumentReference<DocumentData>;
   addFiles?: boolean;
   multiply?: boolean;
-  files?: boolean;
+  files?: DocumentReference<DocumentData>[];
   answer?: boolean;
   onClick?: (task: any) => Promise<void>;
 }

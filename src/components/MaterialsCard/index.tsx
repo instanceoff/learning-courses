@@ -31,7 +31,7 @@ const MaterialsCard: React.FC<IMaterial> = ({
               {title}
             </h6>
           </a>
-          <ButtonDelete uRef={uRef!} modalId={id.slice(1, 2)} />
+          <ButtonDelete uRef={uRef!} modalId={id.slice(1, 2)} haveFile={true} />
         </div>
         {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
         {description ? description : 'Описание отсутствует'}

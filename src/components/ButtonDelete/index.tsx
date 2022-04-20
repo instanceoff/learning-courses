@@ -1,3 +1,4 @@
+import { deleteDocument, deleteDocumentAndFile } from 'api/document';
 import { storage } from 'api/firebase';
 import { deleteDoc, DocumentData, DocumentReference } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
@@ -7,9 +8,10 @@ import { useDocument } from 'react-firebase-hooks/firestore';
 type TButton = {
   uRef: DocumentReference<DocumentData>;
   modalId: string;
+  haveFile: boolean;
 };
 
-const Button: React.FC<TButton> = ({ uRef, modalId }) => {
+const Button: React.FC<TButton> = ({ uRef, modalId, haveFile }) => {
   useEffect(() => {
     window.document.dispatchEvent(new Event('DOMContentLoaded'));
   }, []);
@@ -17,10 +19,10 @@ const Button: React.FC<TButton> = ({ uRef, modalId }) => {
   const [document, loading, error] = useDocument(uRef);
   const documentRef = ref(storage, document?.get('filePath'));
 
-  const deleteDocument = async () => {
-    await deleteDoc(uRef);
-    await deleteObject(documentRef);
-  };
+  // const deleteDocument = async () => {
+  //   await deleteDoc(uRef);
+  //   await deleteObject(documentRef);
+  // };
 
   return (
     <>
@@ -37,9 +39,9 @@ const Button: React.FC<TButton> = ({ uRef, modalId }) => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
           ></path>
         </svg>
@@ -66,7 +68,7 @@ const Button: React.FC<TButton> = ({ uRef, modalId }) => {
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
-                    fill-rule="evenodd"
+                    fillRule="evenodd"
                     d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                     clip-rule="evenodd"
                   ></path>
@@ -83,9 +85,9 @@ const Button: React.FC<TButton> = ({ uRef, modalId }) => {
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 ></path>
               </svg>
@@ -96,7 +98,9 @@ const Button: React.FC<TButton> = ({ uRef, modalId }) => {
                 data-modal-toggle={modalId}
                 type="button"
                 className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
-                onClick={deleteDocument}
+                onClick={e =>
+                  haveFile ? deleteDocumentAndFile(uRef) : deleteDocument(uRef)
+                }
               >
                 Да, я уверен
               </button>

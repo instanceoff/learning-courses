@@ -42,7 +42,11 @@ const TaskCard: React.FC<ITask> = ({
 
         <div className="flex justify-between w-full">
           <Button title="Открыть задание" modalId={id} />
-          <ButtonDelete uRef={uRef!} modalId={id.slice(1, 2)} />
+          <ButtonDelete
+            uRef={uRef!}
+            modalId={id.slice(1, 2)}
+            haveFile={false}
+          />
         </div>
         <ModalTask
           id={id}
