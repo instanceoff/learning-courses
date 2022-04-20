@@ -1,4 +1,4 @@
-import { firestore } from 'api/firebase';
+import { firestore, storage } from 'api/firebase';
 import MaterialsCard from 'components/MaterialsCard';
 import Header from 'components/Header';
 import Loading from 'components/Loading';
@@ -24,6 +24,7 @@ import Button from 'components/Button';
 import { IMaterial, ITask } from 'types/course';
 import ModalTask from 'components/ModalTask';
 import ModalCreateTask from 'components/ModalCreateTask';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 type TMainCourse = {
   id?: string;
@@ -51,25 +52,47 @@ const MainCourse: React.FC<TMainCourse> = id => {
     ),
   );
 
-  const newTask: ITask = {
-    course: currentCourseRef,
-    title: taskTitle,
-    description: '',
-    id: '',
-  };
+  // const newTask: ITask = {
+  //   course: currentCourseRef,
+  //   title: taskTitle,
+  //   description: '',
+  //   id: '',
+  // };
 
   const createNewTask = async task => {
     await addDoc(collection(firestore, 'tasks'), task);
   };
 
-  const newMaterial: IMaterial = {
-    course: currentCourseRef,
-    title: materialTitle,
-    description: '',
+  const test: FileList = {
+    length: 0,
+    item: function (index: number): File | null {
+      throw new Error('Function not implemented.');
+    },
   };
 
-  const createNewMaterial = async () => {
-    await addDoc(collection(firestore, 'materials'), newMaterial);
+  const [file, setFile] = useState(test);
+  // const [downloadUrl, setDownloadUrl] = useState('');
+
+  const fileHandler = addedFiles => {
+    setFile(addedFiles);
+    console.log(addedFiles[0]);
+  };
+
+  const filePush = async () => {
+    const fileRef = await ref(
+      storage,
+      `materials/${currentCourseRef.id}/${file[0].name}`,
+    );
+    await uploadBytes(fileRef, file[0]).then(snapshot => {
+      console.log('Файл загружен');
+    });
+    const downloadUrl = await getDownloadURL(fileRef);
+    await addDoc(collection(firestore, 'materials'), {
+      course: currentCourseRef,
+      title: file[0].name,
+      filePath: `materials/${currentCourseRef.id}/${file[0].name}`,
+      downloadUrl: downloadUrl,
+    });
   };
 
   return (
@@ -78,8 +101,18 @@ const MainCourse: React.FC<TMainCourse> = id => {
       <div className="flex flex-col mx-2">
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
           <div className="w-fit flex-col">
-            <div className="flex mb-2 max-h-10">
-              <Button title="Создать материал" onClick={createNewMaterial} />
+            <div className="flex mb-2 mx-2 max-h-10 justify-between items-center">
+              <div>
+                <input
+                  className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  aria-describedby="user_avatar_help"
+                  id="material_input"
+                  type="file"
+                  onChange={e => fileHandler(e.target.files)}
+                />
+              </div>
+
+              <Button title="Создать материал" onClick={filePush} />
             </div>
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
@@ -96,8 +129,9 @@ const MainCourse: React.FC<TMainCourse> = id => {
                     <MaterialsCard
                       key={material?.id}
                       title={material?.get('title')}
-                      description={material?.get('description')}
                       course={currentCourseRef}
+                      filePath={material?.get('filePath')}
+                      downloadUrl={material?.get('downloadUrl')}
                     />
                   );
                 })
@@ -106,7 +140,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
           </div>
         </div>
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800  my-3 p-3">
-          <div className="flex mb-2 max-h-10">
+          <div className="flex mb-2 mx-2 max-h-10">
             <Button title="Добавить задание" modalId="addTask" />
             <ModalCreateTask
               id={'addTask'}

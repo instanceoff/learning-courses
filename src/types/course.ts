@@ -27,8 +27,8 @@ export interface ITask {
 export interface IMaterial {
   course: DocumentReference<DocumentData>;
   title: string;
-  description: string;
-  fileUrl?: string;
+  filePath?: string;
+  downloadUrl?: string;
 }
 
 export interface ICourse {
