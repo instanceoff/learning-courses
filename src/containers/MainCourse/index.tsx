@@ -33,11 +33,10 @@ type TMainCourse = {
 const MainCourse: React.FC<TMainCourse> = id => {
   const currentCourseId = document.location.pathname.slice(1);
   const currentCourseRef = doc(firestore, 'courses', currentCourseId);
-
-  const [taskTitle, setTaskTitle] = useState('');
-  const [materialTitle, setMaterialTitle] = useState('');
-
   const [curCourse] = useDocument(currentCourseRef);
+
+  // const [taskTitle, setTaskTitle] = useState('');
+  // const [materialTitle, setMaterialTitle] = useState('');
 
   const [tasks, tasksLoading, tasksError] = useCollection(
     query(
@@ -63,36 +62,40 @@ const MainCourse: React.FC<TMainCourse> = id => {
     await addDoc(collection(firestore, 'tasks'), task);
   };
 
-  const test: FileList = {
+  // const [downloadUrl, setDownloadUrl] = useState('');
+
+  // const fileHandler = addedFiles => {
+  //   setFile(addedFiles);
+  //   console.log(addedFiles[0]);
+  // };
+
+  // File upload and download
+  const initialFileList: FileList = {
     length: 0,
     item: function (index: number): File | null {
       throw new Error('Function not implemented.');
     },
   };
 
-  const [file, setFile] = useState(test);
-  // const [downloadUrl, setDownloadUrl] = useState('');
-
-  const fileHandler = addedFiles => {
-    setFile(addedFiles);
-    console.log(addedFiles[0]);
-  };
+  const [file, setFile] = useState(initialFileList);
 
   const filePush = async () => {
-    const fileRef = await ref(
-      storage,
-      `materials/${currentCourseRef.id}/${file[0].name}`,
-    );
-    await uploadBytes(fileRef, file[0]).then(snapshot => {
-      console.log('Файл загружен');
-    });
-    const downloadUrl = await getDownloadURL(fileRef);
-    await addDoc(collection(firestore, 'materials'), {
-      course: currentCourseRef,
-      title: file[0].name,
-      filePath: `materials/${currentCourseRef.id}/${file[0].name}`,
-      downloadUrl: downloadUrl,
-    });
+    if (file.length > 0) {
+      const fileRef = await ref(
+        storage,
+        `materials/${currentCourseRef.id}/${file[0].name}`,
+      );
+      await uploadBytes(fileRef, file[0]).then(snapshot => {
+        console.log('Файл загружен');
+      });
+      const downloadUrl = await getDownloadURL(fileRef);
+      await addDoc(collection(firestore, 'materials'), {
+        course: currentCourseRef,
+        title: file[0].name,
+        filePath: `materials/${currentCourseRef.id}/${file[0].name}`,
+        downloadUrl: downloadUrl,
+      });
+    }
   };
 
   return (
@@ -108,7 +111,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
                   aria-describedby="user_avatar_help"
                   id="material_input"
                   type="file"
-                  onChange={e => fileHandler(e.target.files)}
+                  onChange={e => setFile(e.target.files!)}
                 />
               </div>
 
