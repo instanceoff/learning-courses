@@ -30,7 +30,7 @@ type TMainCourse = {
   id?: string;
 };
 
-const MainCourse: React.FC<TMainCourse> = id => {
+const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   const currentCourseId = document.location.pathname.slice(1);
   const currentCourseRef = doc(firestore, 'courses', currentCourseId);
   const [curCourse] = useDocument(currentCourseRef);
@@ -105,9 +105,9 @@ const MainCourse: React.FC<TMainCourse> = id => {
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
           <div className="w-fit flex-col">
             <div className="flex mb-2 mx-2 max-h-10 justify-between items-center">
-              <div>
+              <div className="mr-4">
                 <input
-                  className="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                  className="block mr-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                   aria-describedby="user_avatar_help"
                   id="material_input"
                   type="file"
@@ -115,7 +115,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
                 />
               </div>
 
-              <Button title="Создать материал" onClick={filePush} />
+              <Button title="Добавить материал" onClick={filePush} />
             </div>
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
@@ -130,6 +130,8 @@ const MainCourse: React.FC<TMainCourse> = id => {
                 materials?.docs.map(material => {
                   return (
                     <MaterialsCard
+                      uRef={doc(firestore, 'materials', material.id)}
+                      id={material.id}
                       key={material?.id}
                       title={material?.get('title')}
                       course={currentCourseRef}
@@ -167,6 +169,7 @@ const MainCourse: React.FC<TMainCourse> = id => {
                   return (
                     <>
                       <TaskCard
+                        uRef={doc(firestore, 'tasks', task.id)}
                         key={task.id}
                         id={task.id}
                         answer={task.get('answer')}

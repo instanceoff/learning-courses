@@ -1,8 +1,11 @@
 import Button from 'components/Button';
+import ButtonDelete from 'components/ButtonDelete';
 import React from 'react';
 import { IMaterial } from 'types/course';
 
 const MaterialsCard: React.FC<IMaterial> = ({
+  uRef,
+  id,
   course,
   title,
   filePath,
@@ -22,11 +25,14 @@ const MaterialsCard: React.FC<IMaterial> = ({
         />
       </a> */}
       <div className="p-5">
-        <a download href={`${downloadUrl}`}>
-          <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
-            {title}
-          </h6>
-        </a>
+        <div className="flex justify-between flex-col">
+          <a download href={`${downloadUrl}`}>
+            <h6 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
+              {title}
+            </h6>
+          </a>
+          <ButtonDelete uRef={uRef!} modalId={id.slice(1, 2)} />
+        </div>
         {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
         {description ? description : 'Описание отсутствует'}
       </p> */}

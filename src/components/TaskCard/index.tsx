@@ -1,9 +1,11 @@
 import Button from 'components/Button';
+import ButtonDelete from 'components/ButtonDelete';
 import ModalTask from 'components/ModalTask';
 import React from 'react';
 import { ITask } from 'types/course';
 
 const TaskCard: React.FC<ITask> = ({
+  uRef,
   id,
   title,
   description,
@@ -37,7 +39,11 @@ const TaskCard: React.FC<ITask> = ({
           {description ? description : 'Описание отсутствует'}
         </p> */}
         {/* <Button title="Открыть задание" href="#" /> */}
-        <Button title="Открыть задание" modalId={id} />
+
+        <div className="flex justify-between w-full">
+          <Button title="Открыть задание" modalId={id} />
+          <ButtonDelete uRef={uRef!} modalId={id.slice(1, 2)} />
+        </div>
         <ModalTask
           id={id}
           title={title}

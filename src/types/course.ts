@@ -25,6 +25,8 @@ export interface ITask {
 }
 
 export interface IMaterial {
+  uRef: DocumentReference<DocumentData>;
+  id: string;
   course: DocumentReference<DocumentData>;
   title: string;
   filePath?: string;
