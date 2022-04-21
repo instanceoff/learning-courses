@@ -40,7 +40,7 @@ const TaskCard: React.FC<ITask> = ({
       </a> */}
       <div className="p-5">
         <a href=" #">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
+          <h5 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
             {title}
           </h5>
         </a>
@@ -60,6 +60,7 @@ const TaskCard: React.FC<ITask> = ({
           )}
         </div>
         <ModalTask
+          uRef={uRef}
           id={id}
           title={title}
           answer={answer}

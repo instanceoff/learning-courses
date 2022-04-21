@@ -1,4 +1,8 @@
-import { deleteDocument, deleteDocumentAndFile } from 'api/document';
+import {
+  deleteDocument,
+  deleteDocumentAndFile,
+  deleteDocumentAndFiles,
+} from 'api/document';
 import { storage } from 'api/firebase';
 import { deleteDoc, DocumentData, DocumentReference } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
@@ -99,7 +103,7 @@ const Button: React.FC<TButton> = ({ uRef, modalId, haveFile }) => {
                 type="button"
                 className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                 onClick={e =>
-                  haveFile ? deleteDocumentAndFile(uRef) : deleteDocument(uRef)
+                  haveFile ? deleteDocumentAndFiles(uRef) : deleteDocument(uRef)
                 }
               >
                 Да, я уверен

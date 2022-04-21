@@ -1,10 +1,13 @@
 import { storage } from 'api/firebase';
+import Loading from 'components/Loading';
 import { ref, uploadBytes } from 'firebase/storage';
 import { title } from 'process';
 import React, { MouseEventHandler, useEffect, useState } from 'react';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { IModal, ITask } from 'types/course';
 
 const ModalTask: React.FC<ITask> = ({
+  uRef,
   id,
   title,
   description,
@@ -20,8 +23,7 @@ const ModalTask: React.FC<ITask> = ({
     window.document.dispatchEvent(new Event('DOMContentLoaded'));
   }, []);
   const [file, setFile] = useState('');
-  const filePath = 'user/task/fileName';
-
+  const [taskDoc, loading, error] = useDocument(uRef);
   const fileHandler = addedFiles => {
     setFile(addedFiles[0].name);
     return addedFiles;
@@ -75,6 +77,53 @@ const ModalTask: React.FC<ITask> = ({
               </p>
             )}
 
+            <div className="flex flex-col">
+              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
+                Дополнительные материалы
+              </label>
+              <div className="flex">
+                {loading ? (
+                  <Loading />
+                ) : (
+                  taskDoc?.get('downloadPathes') &&
+                  taskDoc?.get('downloadPathes').map((downloadPath, index) => {
+                    const fileTitle = taskDoc
+                      ?.get('filesPathes')
+                      [index].split('/')[3];
+                    return (
+                      <div className="bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 m-2">
+                        <div className="p-2">
+                          <div className="flex justify-between">
+                            <a
+                              download
+                              href={`${downloadPath}`}
+                              className="text-blue-700 hover:text-white dark:text-blue-500 dark:hover:text-white "
+                              title={`${fileTitle}`}
+                            >
+                              <svg
+                                className="w-6 h-6"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                ></path>
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+
             {addFiles && (
               <div>
                 <label
@@ -96,7 +145,7 @@ const ModalTask: React.FC<ITask> = ({
               <div>
                 <label
                   htmlFor="message"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >
                   Ответ
                 </label>
