@@ -1,7 +1,7 @@
 import { addDocument, addTask } from 'api/document';
-import { storage } from 'api/firebase';
+import { auth, firestore, storage } from 'api/firebase';
 import Courses from 'containers/Courses';
-import { DocumentReference, DocumentData } from 'firebase/firestore';
+import { DocumentReference, DocumentData, doc } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
 import { title } from 'process';
 import React, {
@@ -11,6 +11,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { IModal, ITask } from 'types/course';
 
 type CheckBox = {

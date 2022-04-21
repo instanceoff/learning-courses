@@ -1,7 +1,11 @@
+import { auth, firestore } from 'api/firebase';
 import Button from 'components/Button';
 import ButtonDelete from 'components/ButtonDelete';
 import ModalTask from 'components/ModalTask';
+import { doc } from 'firebase/firestore';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { ITask } from 'types/course';
 
 const TaskCard: React.FC<ITask> = ({
@@ -18,6 +22,11 @@ const TaskCard: React.FC<ITask> = ({
 }) => {
   const defaultURL =
     'https://images.creativemarket.com/0.1.0/ps/7321584/1820/1210/m1/fpnw/wm1/zdut39gfcqxddqons5jttihib4dbljvx7fsw8l8iey2utfggkoy5gaou4eocsubf-.jpg?1574091458&s=0b3a91eab932d1643429fb9ffe314f4d';
+
+  const [user, loadingAuth, errorAuth] = useAuthState(auth);
+  const accountDoc = doc(firestore, 'accounts', user!.uid);
+  const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
+  const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
   return (
     <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-700 dark:border-gray-800 m-2">
@@ -42,11 +51,13 @@ const TaskCard: React.FC<ITask> = ({
 
         <div className="flex justify-between w-full">
           <Button title="Открыть задание" modalId={id} />
-          <ButtonDelete
-            uRef={uRef!}
-            modalId={id.slice(1, 2)}
-            haveFile={false}
-          />
+          {isTeacher && (
+            <ButtonDelete
+              uRef={uRef!}
+              modalId={id.slice(1, 2)}
+              haveFile={false}
+            />
+          )}
         </div>
         <ModalTask
           id={id}

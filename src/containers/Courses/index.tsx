@@ -9,15 +9,21 @@ import {
   serverTimestamp,
   doc,
 } from 'firebase/firestore';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
-import { firestore } from 'api/firebase';
+import { auth, firestore } from 'api/firebase';
 import Loading from 'components/Loading';
 import Button from 'components/Button';
 import { ITask } from 'types/course';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const Courses = () => {
   const [courseTitle, setCourseTitle] = useState('');
+
+  const [user, loadingAuth, errorAuth] = useAuthState(auth);
+  const accountDoc = doc(firestore, 'accounts', user!.uid);
+  const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
+  const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
   const [courses, loading, error] = useCollection(
     query(collection(firestore, 'courses'), orderBy('createdAt')),
@@ -36,14 +42,15 @@ const Courses = () => {
       <div className="flex mx-2">
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-gray-800 my-5 p-3">
           <div className="w-fit flex-col">
-            <div className="flex mb-2 max-h-10">
-              <div className=" xl:w-96 flex">
-                {/* <label className="form-label inline-block mb-2 text-gray-700">
+            {isTeacher && (
+              <div className="flex mb-2 max-h-10">
+                <div className=" xl:w-96 flex">
+                  {/* <label className="form-label inline-block mb-2 text-gray-700">
                   Название
                 </label> */}
-                <input
-                  type="text"
-                  className="
+                  <input
+                    type="text"
+                    className="
         form-control
         block
         w-full
@@ -62,24 +69,25 @@ const Courses = () => {
         mr-5
         focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
       "
-                  id="courseTitleInput"
-                  placeholder="Наименование курса"
-                  onChange={e => {
-                    setCourseTitle(e.target.value);
-                  }}
-                />
-              </div>
+                    id="courseTitleInput"
+                    placeholder="Наименование курса"
+                    onChange={e => {
+                      setCourseTitle(e.target.value);
+                    }}
+                  />
+                </div>
 
-              <Button title="Создать курс" onClick={createNewCourse} />
+                <Button title="Создать курс" onClick={createNewCourse} />
 
-              {/* <button
+                {/* <button
                 type="button"
                 className="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
                 onClick={createNewCourse}
               >
                 Создать курс
               </button> */}
-            </div>
+              </div>
+            )}
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
                 courses?.size === 1 && 'justify-center'
@@ -93,6 +101,7 @@ const Courses = () => {
                 courses?.docs.map(doc => {
                   return (
                     <Card
+                      uRef={doc.ref}
                       key={doc.id}
                       title={doc.get('title')}
                       description={doc.get('description')}
