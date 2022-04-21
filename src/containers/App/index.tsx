@@ -6,7 +6,7 @@ import Loader from 'components/Loader';
 import PrivateRoute from 'components/PrivateRoute';
 import Login from 'containers/Login';
 import MainCourse from 'containers/MainCourse';
-import Statistic from 'containers/Statistic';
+import Decisions from 'containers/Decisions';
 import Courses from 'containers/Courses';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, firestore } from 'api/firebase';
@@ -55,11 +55,11 @@ const App = () => {
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/" element={<Login />} />
+              <Route path="/" element={<Login />} />s
               <Route path="/*" element={<Login />} />
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="/courses" element={<Courses />} />
-                <Route path="/statistic" element={<Statistic />} />
+                <Route path="/decisions" element={<Decisions />} />
                 <Route
                   path={`/${currentCourse?.id}`}
                   element={<MainCourse id={currentCourse?.id} />}

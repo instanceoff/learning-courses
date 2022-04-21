@@ -24,6 +24,20 @@ export interface ITask {
   onClick?: (task: any) => Promise<void>;
 }
 
+export interface IDecision {
+  uRef?: DocumentReference<DocumentData>;
+  course?: DocumentReference<DocumentData>;
+  task: DocumentReference<DocumentData>;
+  user: DocumentReference<DocumentData>;
+  answer?: string;
+  answerFiles?: string[];
+  title?: string;
+  description: string;
+  score: number;
+  // files?: DocumentReference<DocumentData>[];
+  // onClick?: (task: any) => Promise<void>;
+}
+
 export interface IMaterial {
   uRef: DocumentReference<DocumentData>;
   id: string;
@@ -39,12 +53,4 @@ export interface ICourse {
   imageUrl?: string;
   groups?: string[];
   teachers?: DocumentReference<DocumentData>[];
-}
-
-export interface IDecision {
-  course: DocumentReference<DocumentData>;
-  task: DocumentReference<DocumentData>;
-  user: DocumentReference<DocumentData>;
-  answer?: string;
-  answerFile?: string;
 }

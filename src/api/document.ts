@@ -15,10 +15,37 @@ import {
   StorageReference,
   uploadBytes,
 } from 'firebase/storage';
+import { IDecision, ITask } from 'types/course';
 import { firestore, storage } from './firebase';
 
-export const addDocument = async (collectio, object) => {
-  await addDoc(collection(firestore, collectio), object);
+export const addDocument = async (collectionName, documentData) => {
+  await addDoc(collection(firestore, collectionName), documentData);
+};
+
+export const addDocumentWithFiles = async (
+  collectionName: string,
+  documentData: IDecision,
+  files: FileList,
+) => {
+  const newDocRef = await addDoc(
+    collection(firestore, collectionName),
+    documentData,
+  );
+  if (files && files.length > 0) {
+    const filesAr = await Array.from(files!);
+    await filesAr.map(async file => {
+      const fileRef = await ref(
+        storage,
+        `${collectionName}/${documentData.course?.id}/${newDocRef.id}/${file.name}`,
+      );
+      await uploadBytes(fileRef, file);
+      const downloadUrl = await getDownloadURL(fileRef);
+      updateDoc(newDocRef, {
+        filesPathes: arrayUnion(fileRef.fullPath),
+        downloadPathes: arrayUnion(downloadUrl),
+      });
+    });
+  }
 };
 
 export const addTask = async (

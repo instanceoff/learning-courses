@@ -1,5 +1,5 @@
 import { auth, firestore, storage } from 'api/firebase';
-import MaterialsCard from 'components/MaterialsCard';
+import MaterialsCard from 'components/CardMaterials';
 import Header from 'components/Header';
 import Loading from 'components/Loading';
 import {
@@ -19,7 +19,7 @@ import {
   useDocument,
   useDocumentData,
 } from 'react-firebase-hooks/firestore';
-import TaskCard from 'components/TaskCard';
+import TaskCard from 'components/CardTask';
 import Button from 'components/Button';
 import { IMaterial, ITask } from 'types/course';
 import ModalTask from 'components/ModalTask';

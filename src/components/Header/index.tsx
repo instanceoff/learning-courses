@@ -94,17 +94,17 @@ const Header = () => {
               </li>
               <li>
                 <a
-                  href="/statistic"
+                  href="/decisions"
                   className={
-                    currentLocation === '/statistic'
+                    currentLocation === '/decisions'
                       ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
                       : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
                   }
                   aria-current={
-                    currentLocation === '/statistic' ? 'page' : undefined
+                    currentLocation === '/decisions' ? 'page' : undefined
                   }
                 >
-                  Статистика
+                  Проверка заданий
                 </a>
               </li>
               <li>
@@ -204,7 +204,7 @@ const Header = () => {
               <li>
                 <button
                   type="button"
-                  className="h-10 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
+                  className="h-10 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:border-blue-700 dark:hover:border-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center mr-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
                   onClick={darkModeToggle}
                 >
                   {darkMode ? (
