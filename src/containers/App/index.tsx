@@ -29,6 +29,7 @@ import {
 import Loading from 'components/Loading';
 import Register from 'containers/Register';
 import DarkMode from 'components/DarkMode';
+import Results from 'containers/Results';
 
 const App = () => {
   const currentPage =
@@ -60,6 +61,7 @@ const App = () => {
               <Route path="/" element={<PrivateRoute />}>
                 <Route path="/courses" element={<Courses />} />
                 <Route path="/decisions" element={<Decisions />} />
+                <Route path="/results" element={<Results />} />
                 <Route
                   path={`/${currentCourse?.id}`}
                   element={<MainCourse id={currentCourse?.id} />}

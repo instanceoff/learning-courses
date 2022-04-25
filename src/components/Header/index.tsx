@@ -1,8 +1,12 @@
 import { signOutUser } from 'api/auth';
+import { auth, firestore } from 'api/firebase';
 import Button from 'components/Button';
 import { setDarkMode } from 'containers/App/actions';
 import { selectDarkMode } from 'containers/App/selectors';
+import { doc } from 'firebase/firestore';
 import React, { Children, useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useDocument } from 'react-firebase-hooks/firestore';
 import { useDispatch, useSelector } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
@@ -28,9 +32,14 @@ const Header = () => {
     await signOutUser();
   };
 
+  const [user, loading, error] = useAuthState(auth);
+  const accountDoc = doc(firestore, 'accounts', user!.uid);
+  const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
+  const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
+
   return (
     <>
-      <nav className=" bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-b-lg dark:bg-gray-800">
+      <nav className="bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-b-lg dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <a href="/" className="flex items-center">
             {/* <img
@@ -92,34 +101,38 @@ const Header = () => {
                   Курсы
                 </a>
               </li>
-              <li>
-                <a
-                  href="/decisions"
-                  className={
-                    currentLocation === '/decisions'
-                      ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
-                      : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
-                  }
-                  aria-current={
-                    currentLocation === '/decisions' ? 'page' : undefined
-                  }
-                >
-                  Проверка заданий
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className={
-                    currentLocation === '#'
-                      ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
-                      : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
-                  }
-                  aria-current={currentLocation === '#' ? 'page' : undefined}
-                >
-                  О проекте
-                </a>
-              </li>
+              {isTeacher && (
+                <li>
+                  <a
+                    href="/decisions"
+                    className={
+                      currentLocation === '/decisions'
+                        ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
+                        : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                    }
+                    aria-current={
+                      currentLocation === '/decisions' ? 'page' : undefined
+                    }
+                  >
+                    Проверка заданий
+                  </a>
+                </li>
+              )}
+              {isTeacher && (
+                <li>
+                  <a
+                    href="/results"
+                    className={
+                      currentLocation === '#'
+                        ? 'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white'
+                        : 'block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                    }
+                    aria-current={currentLocation === '#' ? 'page' : undefined}
+                  >
+                    Оценки
+                  </a>
+                </li>
+              )}
               <li>
                 <button
                   className=" block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

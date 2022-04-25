@@ -19,8 +19,19 @@ import {
 import { IDecision, ITask, TDocuments } from 'types/course';
 import { firestore, storage } from './firebase';
 
+export const getDecisionsData = async documentRef => {
+  await getDoc(documentRef).then();
+};
+
 export const addDocument = async (collectionName, documentData) => {
   await addDoc(collection(firestore, collectionName), documentData);
+};
+
+export const updateDocument = async (
+  documentRef: DocumentReference<DocumentData>,
+  documentData,
+) => {
+  await updateDoc(documentRef, documentData);
 };
 
 export const addDocumentWithFiles = async (

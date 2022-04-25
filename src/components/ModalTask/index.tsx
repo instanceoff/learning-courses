@@ -94,9 +94,6 @@ const ModalTask: React.FC<ITask> = ({
             )}
 
             <div className="flex flex-col">
-              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Дополнительные материалы
-              </label>
               <div className="flex">
                 {loading ? (
                   <Loading />
@@ -107,17 +104,17 @@ const ModalTask: React.FC<ITask> = ({
                       ?.get('filesPathes')
                       [index].split('/')[3];
                     return (
-                      <div className="bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 m-2">
-                        <div className="p-2">
-                          <div className="flex justify-between">
-                            <a
-                              download
-                              href={`${downloadPath}`}
-                              className="text-blue-700 hover:text-white dark:text-blue-500 dark:hover:text-white "
-                              title={`${fileTitle}`}
-                            >
+                      <a
+                        download
+                        href={`${downloadPath}`}
+                        className="text-blue-700 hover:border-blue-700 dark:text-blue-500  "
+                        title={`${fileTitle}`}
+                      >
+                        <div className="bg-white rounded-lg hover:text-white dark:hover:text-white  hover:bg-blue-700 dark:hover:bg-blue-700 hover:border-blue-700 border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 m-2">
+                          <div className="p-2">
+                            <div className="flex justify-between  ">
                               <svg
-                                className="w-6 h-6"
+                                className="w-6 h-6 "
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -130,10 +127,10 @@ const ModalTask: React.FC<ITask> = ({
                                   d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                 ></path>
                               </svg>
-                            </a>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      </a>
                     );
                   })
                 )}

@@ -39,9 +39,12 @@ const TaskCard: React.FC<IProps> = ({ decision, decisionData }) => {
       </a> */}
       <div className="p-5">
         <a href=" #">
-          <h5 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
+          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
             {decisionData?.title}
           </h5>
+          <h6 className="mb-4 text-l font-bold tracking-tight text-gray-400 dark:text-gray-200 text-ellipsis overflow-hidden">
+            {userDoc?.get('name')}
+          </h6>
         </a>
         {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
           {description ? description : 'Описание отсутствует'}
@@ -52,7 +55,7 @@ const TaskCard: React.FC<IProps> = ({ decision, decisionData }) => {
           <Button title="Открыть решение" modalId={decision?.id} />
           {isTeacher && (
             <ButtonDelete
-              uRef={decisionData?.uRef!}
+              uRef={decision!.ref}
               modalId={decision?.id.slice(1, 2)!}
               haveFile={false}
             />
