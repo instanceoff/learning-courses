@@ -3,11 +3,14 @@ import { auth, firestore, storage } from 'api/firebase';
 import Loading from 'components/Loading';
 import { doc } from 'firebase/firestore';
 import { ref, uploadBytes } from 'firebase/storage';
-import { title } from 'process';
 import React, { MouseEventHandler, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useDocument } from 'react-firebase-hooks/firestore';
 import { IModal, ITask } from 'types/course';
+
+interface IProps {
+  task: ITask;
+}
 
 const ModalTask: React.FC<ITask> = ({
   uRef,
@@ -40,13 +43,14 @@ const ModalTask: React.FC<ITask> = ({
   const [user, userLoading, userError] = useAuthState(auth);
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
+  const [courseDoc, loadingCourrse, errorCourse] = useDocument(course);
 
-  const filePush = () => {
-    const fileRef = ref(storage, `user/${file}`);
-    uploadBytes(fileRef, fileHandler[0]).then(snapshot => {
-      console.log('Файл загружен');
-    });
-  };
+  // const filePush = () => {
+  //   const fileRef = ref(storage, `user/${file}`);
+  //   uploadBytes(fileRef, fileHandler[0]).then(snapshot => {
+  //     console.log('Файл загружен');
+  //   });
+  // };
 
   return (
     <div
@@ -188,6 +192,7 @@ const ModalTask: React.FC<ITask> = ({
                     user: accountDoc,
                     answer: curAnswer,
                     score: 0,
+                    teacher: courseDoc?.get('teacher'),
                   },
                   curFiles!,
                 )

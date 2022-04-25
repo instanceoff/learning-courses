@@ -6,6 +6,7 @@ import {
   DocumentData,
   DocumentReference,
   getDoc,
+  QueryDocumentSnapshot,
   updateDoc,
 } from 'firebase/firestore';
 import {
@@ -15,7 +16,7 @@ import {
   StorageReference,
   uploadBytes,
 } from 'firebase/storage';
-import { IDecision, ITask } from 'types/course';
+import { IDecision, ITask, TDocuments } from 'types/course';
 import { firestore, storage } from './firebase';
 
 export const addDocument = async (collectionName, documentData) => {
@@ -119,6 +120,23 @@ export const deleteDocumentAndFiles = async (
   await filesPathes.map(async filePath => {
     await deleteObject(ref(storage, filePath));
   });
-  // await deleteObject(ref(storage, (await getDoc(uRef)).get('filesPathes')));
   await deleteDoc(uRef);
+};
+
+export const decisionConverter = (
+  props: QueryDocumentSnapshot<DocumentData>,
+): IDecision => {
+  return {
+    task: props.get('task'),
+    description: props.get('description'),
+    score: props.get('score'),
+    user: props.get('user'),
+    answer: props.get('answer'),
+    course: props.get('course'),
+    downloadPathes: props.get('downloadPathes'),
+    filesPathes: props.get('filesPathes'),
+    title: props.get('title'),
+    uRef: props.get('uRef'),
+    teacher: props.get('teacher'),
+  };
 };

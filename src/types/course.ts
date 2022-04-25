@@ -30,10 +30,12 @@ export interface IDecision {
   task: DocumentReference<DocumentData>;
   user: DocumentReference<DocumentData>;
   answer?: string;
-  answerFiles?: string[];
+  filesPathes?: string[];
+  downloadPathes?: string[];
   title?: string;
   description: string;
   score: number;
+  teacher: DocumentReference<DocumentData>;
   // files?: DocumentReference<DocumentData>[];
   // onClick?: (task: any) => Promise<void>;
 }
@@ -54,3 +56,5 @@ export interface ICourse {
   groups?: string[];
   teachers?: DocumentReference<DocumentData>[];
 }
+
+export type TDocuments = ITask | IDecision;

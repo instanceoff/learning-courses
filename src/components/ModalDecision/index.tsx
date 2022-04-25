@@ -1,40 +1,30 @@
-import { addDocument } from 'api/document';
-import { storage } from 'api/firebase';
-import Loading from 'components/Loading';
-import { ref, uploadBytes } from 'firebase/storage';
-import { title } from 'process';
-import React, { MouseEventHandler, useEffect, useState } from 'react';
+import {
+  DocumentReference,
+  DocumentData,
+  QueryDocumentSnapshot,
+} from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useDocument } from 'react-firebase-hooks/firestore';
-import { IDecision, ITask } from 'types/course';
+import { IDecision } from 'types/course';
 
-const ModalTask: React.FC<IDecision> = ({
-  uRef,
-  title,
-  description,
-  answerFiles,
-  course,
-  answer,
-  score,
-  task,
-  user,
-}) => {
+interface IProps {
+  decision?: QueryDocumentSnapshot<DocumentData>;
+  decisionData?: IDecision;
+}
+
+const ModalDecision: React.FC<IProps> = ({ decision, decisionData }) => {
   useEffect(() => {
     window.document.dispatchEvent(new Event('DOMContentLoaded'));
   }, []);
-  const [file, setFile] = useState('');
-  const [taskDoc, loading, error] = useDocument(uRef);
-  const fileHandler = addedFiles => {
-    setFile(addedFiles[0].name);
-    return addedFiles;
-  };
+  const [decisionDoc] = useDocument(decision?.ref);
+  const [userDoc] = useDocument(decisionData?.user);
+  const [score, setScore] = useState(decisionData?.score);
 
-  const filePush = () => {
-    addDocument('decisions', {});
-  };
+  const updateScore = () => {};
 
   return (
     <div
-      id={uRef?.id}
+      id={decision?.id}
       tabIndex={-1}
       className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full"
     >
@@ -44,12 +34,15 @@ const ModalTask: React.FC<IDecision> = ({
           {/* <!-- Modal header --> */}
           <div className="flex justify-between items-center p-5 rounded-t border-b dark:border-gray-600">
             <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-              {title}
+              {decisionData?.title}
+            </h3>
+            <h3 className="text-xl font-medium text-gray-900 dark:text-white">
+              {userDoc?.get('name')}
             </h3>
             <button
               type="button"
               className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              data-modal-toggle={uRef?.id}
+              data-modal-toggle={decision?.id}
             >
               <svg
                 className="w-5 h-5"
@@ -67,32 +60,28 @@ const ModalTask: React.FC<IDecision> = ({
           </div>
           {/* <!-- Modal body --> */}
           <div className="p-6 space-y-6">
-            {description && (
+            {decision?.get('description') && (
               <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                {description}
+                {decision?.get('description')}
               </p>
             )}
-
-            <div className="flex flex-col">
-              <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
-                Дополнительные материалы
-              </label>
-              <div className="flex">
-                {loading ? (
-                  <Loading />
-                ) : (
-                  taskDoc?.get('downloadPathes') &&
-                  taskDoc?.get('downloadPathes').map((downloadPath, index) => {
-                    const fileTitle = taskDoc
-                      ?.get('filesPathes')
-                      [index].split('/')[3];
+            {decision?.get('downloadPathes') && (
+              <div className="flex flex-col">
+                <label className="block mb-1 text-sm font-medium text-gray-900 dark:text-gray-300">
+                  Приложеные файлы
+                </label>
+                <div className="flex">
+                  {decisionData?.downloadPathes?.map((downloadPath, index) => {
+                    const fileTitle = decisionData?.filesPathes
+                      ?.at(index)!
+                      .split('/')[3];
                     return (
                       <div className="bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-800 dark:border-gray-700 m-2">
                         <div className="p-2">
                           <div className="flex justify-between">
                             <a
                               download
-                              href={`${downloadPath}`}
+                              href={`${decisionData.downloadPathes}`}
                               className="text-blue-700 hover:text-white dark:text-blue-500 dark:hover:text-white "
                               title={`${fileTitle}`}
                             >
@@ -115,11 +104,12 @@ const ModalTask: React.FC<IDecision> = ({
                         </div>
                       </div>
                     );
-                  })
-                )}
+                  })}
+                </div>
               </div>
-            </div>
-            {answer && (
+            )}
+
+            {decisionData?.answer && (
               <div>
                 <label
                   htmlFor="message"
@@ -127,32 +117,141 @@ const ModalTask: React.FC<IDecision> = ({
                 >
                   Ответ
                 </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Ваш ответ..."
-                ></textarea>
+                <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
+                  {decisionData.answer}
+                </p>
               </div>
             )}
           </div>
           {/* <!-- Modal footer --> */}
           <div className="flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 dark:border-gray-600">
             <button
-              data-modal-toggle={uRef?.id}
+              data-modal-toggle={decision?.id}
               type="button"
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-              onClick={e => addDocument('decisions', {})}
             >
               Отправить
             </button>
             <button
-              data-modal-toggle={uRef?.id}
+              data-modal-toggle={decision?.id}
               type="button"
               className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
             >
               Закрыть
             </button>
+            <button
+              id="dropdownDefault"
+              data-dropdown-toggle={`dropdown${decision?.id}`}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              type="button"
+            >
+              {score === 0 ? 'Оценка' : score}
+              <svg
+                className="ml-2 w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                ></path>
+              </svg>
+            </button>
+            {/* <!-- Dropdown menu --> */}
+            <div
+              id={`dropdown${decision?.id}`}
+              className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
+            >
+              <ul
+                className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                aria-labelledby="dropdownDefault"
+              >
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(1)}
+                  >
+                    1
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(2)}
+                  >
+                    2
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(3)}
+                  >
+                    3
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(4)}
+                  >
+                    4
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(5)}
+                  >
+                    5
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(6)}
+                  >
+                    6
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(7)}
+                  >
+                    7
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(8)}
+                  >
+                    8
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(9)}
+                  >
+                    9
+                  </p>
+                </li>
+                <li>
+                  <p
+                    className="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={e => setScore(10)}
+                  >
+                    10
+                  </p>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -160,4 +259,4 @@ const ModalTask: React.FC<IDecision> = ({
   );
 };
 
-export default ModalTask;
+export default ModalDecision;
