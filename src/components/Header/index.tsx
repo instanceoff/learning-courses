@@ -118,7 +118,7 @@ const Header = () => {
                   </a>
                 </li>
               )}
-              {isTeacher && (
+              {!isTeacher && (
                 <li>
                   <a
                     href="/results"

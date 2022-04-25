@@ -103,6 +103,14 @@ const Main = () => {
         >
           Регистрация
         </button>
+        <a
+          href="/login"
+          className="ml-5 font-normal text-sm dark:hover:text-blue-700 text-gray-900 dark:text-gray-300"
+        >
+          <label className="ml-5 hover:cursor-pointer font-normal text-sm hover:text-blue-700 dark:hover:text-blue-700 text-gray-900 dark:text-gray-300">
+            Уже есть аккаунт? Войдите
+          </label>
+        </a>
       </form>
     </div>
   );
