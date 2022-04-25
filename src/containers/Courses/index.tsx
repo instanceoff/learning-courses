@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Card from 'components/Card';
 import Header from 'components/Header';
 import {
@@ -8,6 +8,8 @@ import {
   orderBy,
   serverTimestamp,
   doc,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 
@@ -23,15 +25,53 @@ const Courses = () => {
   const [user, loadingAuth, errorAuth] = useAuthState(auth);
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
+  let curUserDoc;
+
+  useEffect(() => {
+    curUserDoc = userDoc;
+  }, [userDoc]);
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
-  const [courses, loading, error] = useCollection(
-    query(collection(firestore, 'courses'), orderBy('createdAt')),
+  const [studentCourses, studentLoading, studentError] = useCollection(
+    query(
+      collection(firestore, 'courses'),
+      where('groups', 'array-contains', userDoc?.get('group') || '0'),
+      orderBy('createdAt'),
+    ),
   );
+
+  /*
+  useEffect(() => {
+    try {
+      const q = query(
+        collection(firestore, 'courses'),
+        where('groups', 'array-contains', userDoc?.get('group') || '0'),
+        orderBy('createdAt'),
+      );
+
+      const snapshot = getDocs(q);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  */
+
+  const [teacherCourses, teacherLoading, teacherError] = useCollection(
+    query(
+      collection(firestore, 'courses'),
+      where('teacher', '==', accountDoc),
+      orderBy('createdAt'),
+    ),
+  );
+
+  const courses = isTeacher ? teacherCourses : studentCourses;
+  const loading = isTeacher ? teacherLoading : studentLoading;
+  const error = isTeacher ? teacherError : studentError;
 
   const createNewCourse = async () => {
     await addDoc(collection(firestore, 'courses'), {
       title: courseTitle,
+      teacher: accountDoc,
       createdAt: serverTimestamp(),
     });
   };
