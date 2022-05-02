@@ -25,11 +25,11 @@ const Courses = () => {
   const [user, loadingAuth, errorAuth] = useAuthState(auth);
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
-  let curUserDoc;
+  // let curUserDoc;
 
-  useEffect(() => {
-    curUserDoc = userDoc;
-  }, [userDoc]);
+  // useEffect(() => {
+  //   curUserDoc = userDoc;
+  // }, [userDoc]);
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
   const [studentCourses, studentLoading, studentError] = useCollection(

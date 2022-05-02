@@ -40,6 +40,8 @@ const Main = () => {
           </label>
           <input
             type="email"
+            data-tooltip-target="tooltip-email"
+            data-tooltip-placement="right"
             id="email"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="name@flowbite.com"
@@ -48,6 +50,14 @@ const Main = () => {
             }}
             required
           />
+          <div
+            id="tooltip-email"
+            role="tooltip"
+            className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-blue-700"
+          >
+            Почта должна быть стандартного формата
+            <div className="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
         <div className="mb-6">
           <label
@@ -58,6 +68,8 @@ const Main = () => {
           </label>
           <input
             type="password"
+            data-tooltip-target="tooltip-password"
+            data-tooltip-placement="right"
             id="password"
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             onChange={e => {
@@ -65,6 +77,14 @@ const Main = () => {
             }}
             required
           />
+          <div
+            id="tooltip-password"
+            role="tooltip"
+            className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-blue-700"
+          >
+            Пароль должен содержать больше 7 символов!
+            <div className="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
         <div className="flex items-start mb-6">
           <div className="flex items-center h-5">
@@ -89,12 +109,12 @@ const Main = () => {
           disabled={!isValid}
           onClick={loginHandler}
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white bg-blue-700 disabled:bg-gray-500 dark:disabled:bg-gray-500  hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
           Вход
         </button>
         <a
-          href="/registration"
+          href="/register"
           className="ml-5 font-normal text-sm dark:hover:text-blue-700 text-gray-900 dark:text-gray-300"
         >
           <label className="ml-5 hover:cursor-pointer font-normal text-sm hover:text-blue-700 dark:hover:text-blue-700 text-gray-900 dark:text-gray-300">

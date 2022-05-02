@@ -13,14 +13,17 @@ const Main = () => {
   const [isValid, setIsValid] = useState(false);
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [secondPassword, setSecondPassword] = useState('');
 
   useEffect(() => {
     window.document.dispatchEvent(new Event('DOMContentLoaded'));
   }, []);
 
   useEffect(() => {
-    setIsValid(regular.test(login) && password.length > 8);
-  }, [login, password]);
+    setIsValid(
+      regular.test(login) && password.length > 8 && password === secondPassword,
+    );
+  }, [login, password, secondPassword]);
 
   const loginHandler = async event => {
     event.preventDefault();
@@ -45,11 +48,22 @@ const Main = () => {
           </label>
           <input
             type="email"
+            data-tooltip-target="tooltip-email"
+            data-tooltip-placement="right"
             id="email"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             placeholder="name@flowbite.com"
             required
+            onChange={e => setLogin(e.target.value)}
           />
+          <div
+            id="tooltip-email"
+            role="tooltip"
+            className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-blue-700"
+          >
+            Почта должна быть стандартного формата
+            <div className="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -57,10 +71,21 @@ const Main = () => {
           </label>
           <input
             type="password"
+            data-tooltip-target="tooltip-password"
+            data-tooltip-placement="right"
             id="password"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
+            onChange={e => setPassword(e.target.value)}
           />
+          <div
+            id="tooltip-password"
+            role="tooltip"
+            className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-blue-700"
+          >
+            Пароль должен содержать больше 7 символов!
+            <div className="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
         <div className="mb-6">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -68,10 +93,21 @@ const Main = () => {
           </label>
           <input
             type="password"
+            data-tooltip-target="tooltip-secondpassword"
+            data-tooltip-placement="right"
             id="repeat-password"
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
+            onChange={e => setSecondPassword(e.target.value)}
           />
+          <div
+            id="tooltip-secondpassword"
+            role="tooltip"
+            className="inline-block absolute invisible z-10 py-2 px-3 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-blue-700"
+          >
+            Данное поле должно совпадать с паролем введенным выше
+            <div className="tooltip-arrow" data-popper-arrow></div>
+          </div>
         </div>
         <div className="flex items-start mb-6">
           <div className="flex items-center h-5">
@@ -99,7 +135,8 @@ const Main = () => {
           disabled={!isValid}
           onClick={registerHandler}
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          className="text-white bg-blue-700 disabled:bg-gray-500 dark:disabled:bg-gray-500 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600  dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          title={!isValid ? 'Убедитесь в правильности заполненных данных' : ''}
         >
           Регистрация
         </button>
