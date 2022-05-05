@@ -4,6 +4,8 @@ import Header from 'components/Header';
 import Loading from 'components/Loading';
 import {
   addDoc,
+  arrayRemove,
+  arrayUnion,
   collection,
   doc,
   documentId,
@@ -25,7 +27,7 @@ import { IMaterial, ITask } from 'types/course';
 import ModalTask from 'components/ModalTask';
 import ModalCreateTask from 'components/ModalCreateTask';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import { addDocument, addMaterials } from 'api/document';
+import { addDocument, addMaterials, updateDocument } from 'api/document';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 type TMainCourse = {
@@ -44,6 +46,8 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
+  const [newGroup, setNewGroup] = useState('');
+  const [deletableGroup, setDeletableGroup] = useState('');
 
   // const [taskTitle, setTaskTitle] = useState('');
   // const [materialTitle, setMaterialTitle] = useState('');
@@ -108,36 +112,142 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   //   }
   // };
 
+  const addNewGroup = async () => {
+    if (newGroup)
+      await updateDocument(curCourse!.ref, { groups: arrayUnion(newGroup) });
+  };
+
+  const deleteGroup = async group => {
+    if (group)
+      await updateDocument(curCourse!.ref, { groups: arrayRemove(group) });
+  };
+
   return (
     <>
       <Header />
       <div className="flex flex-col mx-2">
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
-          <div className="w-fit flex-col">
+          <div className="flex w-fit flex-col justify-center items-center">
+            {isTeacher && (
+              <>
+                <button
+                  id="dropdownDefault"
+                  data-dropdown-toggle={`dropdowngroup`}
+                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button"
+                >
+                  Группы
+                  <svg
+                    className="ml-2 w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  id={`dropdowngroup`}
+                  className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
+                >
+                  <ul
+                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdownDefault"
+                  >
+                    {curCourse?.get('groups')?.map(group => {
+                      return (
+                        <li className="flex py-2 px-4 items-center justify-between ">
+                          <p className="block  ">{group}</p>
+                          <svg
+                            className="w-6 h-6 rounded-md hover:text-white hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            onClick={e => deleteGroup(group)}
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            ></path>
+                          </svg>
+                        </li>
+                      );
+                    })}
+                    <li className="px-3">
+                      <div className="flex flex-col">
+                        <input
+                          type="text"
+                          className="
+                          
+        form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+       mb-2
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+      "
+                          id="courseTitleInput"
+                          placeholder="Номер группы"
+                          onChange={e => {
+                            setNewGroup(e.target.value);
+                          }}
+                        />
+                        <div className="text-center">
+                          <Button
+                            title="Добавить группу"
+                            onClick={addNewGroup}
+                          />
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
             {loading || loadingDoc ? (
               <Loading />
-            ) : (
-              isTeacher && (
-                <div className="flex mb-2 mx-2 max-h-10 justify-between items-center">
-                  <div className="mr-4">
-                    <input
-                      className="block mr-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                      aria-describedby="user_avatar_help"
-                      id="material_input"
-                      type="file"
-                      onChange={e => setFiles(e.target.files!)}
-                      multiple
-                    />
-                  </div>
-
-                  <Button
-                    title="Добавить материал"
-                    onClick={e =>
-                      addMaterials(currentCourseRef, files, 'materials')
-                    }
+            ) : isTeacher ? (
+              <div className="flex mb-2 mx-2 max-h-10 justify-between items-center">
+                <div className="mr-4">
+                  <input
+                    className="block mr-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    aria-describedby="user_avatar_help"
+                    id="material_input"
+                    type="file"
+                    onChange={e => setFiles(e.target.files!)}
+                    multiple
                   />
                 </div>
-              )
+
+                <Button
+                  title="Добавить материал"
+                  onClick={e =>
+                    addMaterials(currentCourseRef, files, 'materials')
+                  }
+                />
+              </div>
+            ) : (
+              <label className="block text-lg font-medium text-gray-900 dark:text-gray-300">
+                Учебные материалы
+              </label>
             )}
             <div
               className={` max-w-screen-lg flex justify-center  xl:justify-start ${
@@ -166,8 +276,8 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
             </div>
           </div>
         </div>
-        <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800  my-3 p-3">
-          {isTeacher && (
+        <div className="flex flex-col justify-center items-center mx-auto rounded-lg bg-slate-100 dark:bg-slate-800  my-3 p-3">
+          {isTeacher ? (
             <div className="flex mb-2 mx-2 max-h-10">
               <Button title="Добавить задание" modalId="addTask" />
               <ModalCreateTask
@@ -177,6 +287,10 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
                 course={currentCourseRef}
               />
             </div>
+          ) : (
+            <label className="block text-lg font-medium text-gray-900 dark:text-gray-300">
+              Учебные задания
+            </label>
           )}
           <div className="w-fit flex-col">
             <div
