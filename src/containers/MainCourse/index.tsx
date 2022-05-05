@@ -47,10 +47,6 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
   const [newGroup, setNewGroup] = useState('');
-  const [deletableGroup, setDeletableGroup] = useState('');
-
-  // const [taskTitle, setTaskTitle] = useState('');
-  // const [materialTitle, setMaterialTitle] = useState('');
 
   const [tasks, tasksLoading, tasksError] = useCollection(
     query(
@@ -65,24 +61,6 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
     ),
   );
 
-  // const newTask: ITask = {
-  //   course: currentCourseRef,
-  //   title: taskTitle,
-  //   description: '',
-  //   id: '',
-  // };
-
-  // const createNewTask = async task => {
-  //   await addDoc(collection(firestore, 'tasks'), task);
-  // };
-
-  // const [downloadUrl, setDownloadUrl] = useState('');
-
-  // const fileHandler = addedFiles => {
-  //   setFile(addedFiles);
-  //   console.log(addedFiles[0]);
-  // };
-
   // File upload and download
   const initialFileList: FileList = {
     length: 0,
@@ -92,25 +70,6 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
   };
 
   const [files, setFiles] = useState(initialFileList);
-
-  // const filePush = async () => {
-  //   if (files.length > 0) {
-  //     for (let i = 0; i < files.length; i++) {
-  //       const fileRef = await ref(
-  //         storage,
-  //         `materials/${currentCourseRef.id}/${files[i].name}`,
-  //       );
-  //       await uploadBytes(fileRef, files[i]);
-  //       const downloadUrl = await getDownloadURL(fileRef);
-  //       await addDoc(collection(firestore, 'materials'), {
-  //         course: currentCourseRef,
-  //         title: files[i].name,
-  //         filePath: `materials/${currentCourseRef.id}/${files[i].name}`,
-  //         downloadUrl: downloadUrl,
-  //       });
-  //     }
-  //   }
-  // };
 
   const addNewGroup = async () => {
     if (newGroup)
@@ -128,100 +87,6 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
       <div className="flex flex-col mx-2">
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-slate-800 mt-5 p-3">
           <div className="flex w-fit flex-col justify-center items-center">
-            {isTeacher && (
-              <>
-                <button
-                  id="dropdownDefault"
-                  data-dropdown-toggle={`dropdowngroup`}
-                  className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  type="button"
-                >
-                  Группы
-                  <svg
-                    className="ml-2 w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    ></path>
-                  </svg>
-                </button>
-                <div
-                  id={`dropdowngroup`}
-                  className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
-                >
-                  <ul
-                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
-                    aria-labelledby="dropdownDefault"
-                  >
-                    {curCourse?.get('groups')?.map(group => {
-                      return (
-                        <li className="flex py-2 px-4 items-center justify-between ">
-                          <p className="block  ">{group}</p>
-                          <svg
-                            className="w-6 h-6 rounded-md hover:text-white hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
-                            onClick={e => deleteGroup(group)}
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12"
-                            ></path>
-                          </svg>
-                        </li>
-                      );
-                    })}
-                    <li className="px-3">
-                      <div className="flex flex-col">
-                        <input
-                          type="text"
-                          className="
-                          
-        form-control
-        block
-        w-full
-        px-3
-        py-1.5
-        text-base
-        font-normal
-        text-gray-700
-        bg-white bg-clip-padding
-        border border-solid border-gray-300
-        rounded
-        transition
-        ease-in-out
-       mb-2
-        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
-      "
-                          id="courseTitleInput"
-                          placeholder="Номер группы"
-                          onChange={e => {
-                            setNewGroup(e.target.value);
-                          }}
-                        />
-                        <div className="text-center">
-                          <Button
-                            title="Добавить группу"
-                            onClick={addNewGroup}
-                          />
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </>
-            )}
             {loading || loadingDoc ? (
               <Loading />
             ) : isTeacher ? (
@@ -321,6 +186,100 @@ const MainCourse: React.FC<TMainCourse> = ({ id }) => {
                 })
               )}
             </div>
+            {isTeacher && (
+              <>
+                <button
+                  id="dropdownDefault"
+                  data-dropdown-toggle={`dropdowngroup`}
+                  className="w-28 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  type="button"
+                >
+                  Группы
+                  <svg
+                    className="ml-2 w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  id={`dropdowngroup`}
+                  className="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700"
+                >
+                  <ul
+                    className="py-1 text-sm text-gray-700 dark:text-gray-200"
+                    aria-labelledby="dropdownDefault"
+                  >
+                    {curCourse?.get('groups')?.map(group => {
+                      return (
+                        <li className="flex py-2 px-4 items-center justify-between ">
+                          <p className="block  ">{group}</p>
+                          <svg
+                            className="w-6 h-6 rounded-md hover:text-white hover:bg-red-600 dark:hover:bg-red-600 dark:hover:text-white"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                            onClick={e => deleteGroup(group)}
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M6 18L18 6M6 6l12 12"
+                            ></path>
+                          </svg>
+                        </li>
+                      );
+                    })}
+                    <li className="px-3">
+                      <div className="flex flex-col">
+                        <input
+                          type="text"
+                          className="
+                          
+        form-control
+        block
+        w-full
+        px-3
+        py-1.5
+        text-base
+        font-normal
+        text-gray-700
+        bg-white bg-clip-padding
+        border border-solid border-gray-300
+        rounded
+        transition
+        ease-in-out
+       mb-2
+        focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+      "
+                          id="courseTitleInput"
+                          placeholder="Номер группы"
+                          onChange={e => {
+                            setNewGroup(e.target.value);
+                          }}
+                        />
+                        <div className="text-center">
+                          <Button
+                            title="Добавить группу"
+                            onClick={addNewGroup}
+                          />
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
