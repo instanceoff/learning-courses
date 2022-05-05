@@ -144,6 +144,7 @@ export const decisionConverter = (
     user: props.get('user'),
     answer: props.get('answer'),
     course: props.get('course'),
+    courseName: props.get('courseName'),
     downloadPathes: props.get('downloadPathes'),
     filesPathes: props.get('filesPathes'),
     title: props.get('title'),

@@ -36,6 +36,7 @@ export interface IDecision {
   description: string;
   score: number;
   teacher: DocumentReference<DocumentData>;
+  courseName?: string;
   // files?: DocumentReference<DocumentData>[];
   // onClick?: (task: any) => Promise<void>;
 }
