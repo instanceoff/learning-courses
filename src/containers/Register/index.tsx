@@ -27,13 +27,16 @@ const Main = () => {
 
   const loginHandler = async event => {
     event.preventDefault();
-    await signIn(dispatch, login, password);
+    const loginAuth = await signIn(dispatch, login, password);
+    loginAuth.isComplete && window.location.assign('/login');
   };
 
   const registerHandler = async event => {
     event.preventDefault();
-    await createAuth(dispatch, login, password);
+    const register = await createAuth(dispatch, login, password);
+    register.isComplete && loginHandler(event);
   };
+
   const signOut = async event => {
     event.preventDefault();
     await signOutUser();

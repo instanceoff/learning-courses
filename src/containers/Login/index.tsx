@@ -25,7 +25,7 @@ const Main = () => {
   const loginHandler = async event => {
     event.preventDefault();
     const signInn = await signIn(dispatch, login, password);
-    signInn.isComplete && window.open('courses');
+    signInn.isComplete && window.location.assign('/courses');
   };
 
   return (

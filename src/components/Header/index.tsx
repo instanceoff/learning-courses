@@ -29,7 +29,7 @@ const Header = () => {
 
   const signOut = async event => {
     event.preventDefault();
-    await signOutUser();
+    await signOutUser().then(e => window.location.assign('/login'));
   };
 
   const [user, loading, error] = useAuthState(auth);
