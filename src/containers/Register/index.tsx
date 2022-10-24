@@ -21,7 +21,7 @@ const Main = () => {
 
   useEffect(() => {
     setIsValid(
-      regular.test(login) && password.length > 8 && password === secondPassword,
+      regular.test(login) && password.length > 7 && password === secondPassword,
     );
   }, [login, password, secondPassword]);
 
