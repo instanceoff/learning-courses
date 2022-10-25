@@ -39,7 +39,7 @@ build/Release
 
 # Firebase
 .firebase/
-
+build
 
 # Dependency directories
 node_modules/
