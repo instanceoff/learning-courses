@@ -1,4 +1,4 @@
-# diplom
+# Learning Courses
 ## Description
 
 In this project you can create courses, as a teacher, add task and sources to learn. Also you can check completed tasks from students and sets score.
