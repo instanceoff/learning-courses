@@ -25,48 +25,24 @@ const Courses = () => {
   const [user, loadingAuth, errorAuth] = useAuthState(auth);
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
-  // let curUserDoc;
 
-  // useEffect(() => {
-  //   curUserDoc = userDoc;
-  // }, [userDoc]);
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
-  const [studentCourses, studentLoading, studentError] = useCollection(
-    query(
-      collection(firestore, 'courses'),
-      where('groups', 'array-contains', userDoc?.get('group') || '0'),
-      orderBy('createdAt'),
-    ),
+  const teacherQuery = query(
+    collection(firestore, 'courses'),
+    where('teacher', '==', accountDoc),
+    orderBy('createdAt'),
   );
 
-  /*
-  useEffect(() => {
-    try {
-      const q = query(
-        collection(firestore, 'courses'),
-        where('groups', 'array-contains', userDoc?.get('group') || '0'),
-        orderBy('createdAt'),
-      );
-
-      const snapshot = getDocs(q);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  */
-
-  const [teacherCourses, teacherLoading, teacherError] = useCollection(
-    query(
-      collection(firestore, 'courses'),
-      where('teacher', '==', accountDoc),
-      orderBy('createdAt'),
-    ),
+  const studentQuery = query(
+    collection(firestore, 'courses'),
+    where('groups', 'array-contains', userDoc?.get('group') || '0'),
+    orderBy('createdAt'),
   );
 
-  const courses = isTeacher ? teacherCourses : studentCourses;
-  const loading = isTeacher ? teacherLoading : studentLoading;
-  const error = isTeacher ? teacherError : studentError;
+  const [courses, loading, error] = useCollection(
+    isTeacher ? teacherQuery : studentQuery,
+  );
 
   const createNewCourse = async () => {
     await addDoc(collection(firestore, 'courses'), {
