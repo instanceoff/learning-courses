@@ -7,6 +7,7 @@ import {
   DocumentReference,
   getDoc,
   QueryDocumentSnapshot,
+  serverTimestamp,
   updateDoc,
 } from 'firebase/firestore';
 import {
@@ -117,6 +118,10 @@ export const deleteDocument = async (uRef: DocumentReference<DocumentData>) => {
   await deleteDoc(uRef);
 };
 
+export const deleteCourse = async (uRef: DocumentReference<DocumentData>) => {
+  await deleteDoc(uRef);
+};
+
 export const deleteDocumentAndFile = async (
   uRef: DocumentReference<DocumentData>,
 ) => {
@@ -151,4 +156,12 @@ export const decisionConverter = (
     uRef: props.get('uRef'),
     teacher: props.get('teacher'),
   };
+};
+
+export const createNewCourse = async (title, teacher) => {
+  await addDoc(collection(firestore, 'courses'), {
+    title: title,
+    teacher: teacher,
+    createdAt: serverTimestamp(),
+  });
 };

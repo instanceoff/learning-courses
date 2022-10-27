@@ -23,11 +23,6 @@ const Button: React.FC<TButton> = ({ uRef, modalId, haveFile }) => {
   const [document, loading, error] = useDocument(uRef);
   const documentRef = ref(storage, document?.get('filePath'));
 
-  // const deleteDocument = async () => {
-  //   await deleteDoc(uRef);
-  //   await deleteObject(documentRef);
-  // };
-
   return (
     <>
       <button

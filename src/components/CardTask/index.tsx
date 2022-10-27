@@ -29,26 +29,13 @@ const TaskCard: React.FC<ITask> = ({
   const isTeacher = userDoc?.get('status') === 'teacher' ? true : false;
 
   return (
-    <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-700 dark:border-gray-800 m-2">
-      {/* <a href={`/${courseURL}`}>
-        <img
-          // w-full h-40
-          className=" rounded-t-lg object-cover"
-          src={imageURL ? imageURL : defaultURL}
-          alt="Обложка курса"
-        />
-      </a> */}
+    <div className="w-60 bg-white rounded-lg border border-gray-200 shadow-md dark:bg-slate-700 dark:border-gray-800">
       <div className="p-5">
         <a href=" #">
           <h5 className="mb-4 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-ellipsis overflow-hidden">
             {title}
           </h5>
         </a>
-        {/* <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-          {description ? description : 'Описание отсутствует'}
-        </p> */}
-        {/* <Button title="Открыть задание" href="#" /> */}
-
         <div className="flex justify-between w-full">
           <Button title="Открыть задание" modalId={id} />
           {isTeacher && (

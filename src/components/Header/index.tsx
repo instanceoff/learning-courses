@@ -22,6 +22,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const { darkMode } = useSelector(stateSelector);
+
   const darkModeToggle = () => {
     localStorage.setItem('darkMode', JSON.stringify(!darkMode));
     dispatch(setDarkMode(!darkMode));
@@ -42,13 +43,8 @@ const Header = () => {
       <nav className="bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-b-lg dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
           <a href="/courses" className="flex items-center">
-            {/* <img
-            src="/docs/images/logo.svg"
-            className="mr-3 h-6 sm:h-9"
-            alt="Flowbite Logo"
-          /> */}
             <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Diplom
+              Learning courses
             </span>
           </a>
           <button

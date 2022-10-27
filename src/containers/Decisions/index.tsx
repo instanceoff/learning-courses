@@ -26,30 +26,17 @@ const Decisions = () => {
       <div className="flex mx-2">
         <div className="mx-auto rounded-lg bg-slate-100 dark:bg-gray-800 my-5 p-3">
           <div className="w-fit flex-col">
-            {/* <div className="flex mb-2 max-h-10"></div> */}
-            {decisions?.docs.map(decision => {
-              const convertedDecision = decisionConverter(decision);
-              return (
-                // <CardDecision
-                //   task={decision.get('task')}
-                //   key={decision.ref.id}
-                //   user={decision.get('user')}
-                //   description={decision.get('description')}
-                //   score={decision.get('score')}
-                //   answer={decision.get('answer')}
-                //   course={decision.get('course')}
-                //   downloadPathes={decision.get('downloadPathes')}
-                //   filesPathes={decision.get('filesPathes')}
-                //   title={decision.get('title')}
-                //   uRef={decision.ref}
-                // />
-
-                <CardDecision
-                  decision={decision}
-                  decisionData={convertedDecision}
-                />
-              );
-            })}
+            {decisions && decisions.size > 0
+              ? decisions.docs.map(decision => {
+                  const convertedDecision = decisionConverter(decision);
+                  return (
+                    <CardDecision
+                      decision={decision}
+                      decisionData={convertedDecision}
+                    />
+                  );
+                })
+              : 'Сейчас тут пусто'}
           </div>
         </div>
       </div>
