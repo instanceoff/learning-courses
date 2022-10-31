@@ -1,4 +1,5 @@
 import { signOutUser } from 'api/auth';
+import { updateDocument } from 'api/document';
 import { auth, firestore } from 'api/firebase';
 import Button from 'components/Button';
 import { setDarkMode } from 'containers/App/actions';
@@ -33,6 +34,13 @@ const Header = () => {
     await signOutUser().then(e => window.location.assign('/login'));
   };
 
+  const statusToggle = () => {
+    userDoc &&
+      updateDocument(userDoc.ref, {
+        status: isTeacher ? 'student' : 'teacher',
+      });
+  };
+
   const [user, loading, error] = useAuthState(auth);
   const accountDoc = doc(firestore, 'accounts', user!.uid);
   const [userDoc, loadingDoc, errorDoc] = useDocument(accountDoc);
@@ -42,11 +50,34 @@ const Header = () => {
     <>
       <nav className="bg-slate-100 border-gray-200 px-2 max-w-7xl sm:px-4 mx-auto py-2.5 rounded-b-lg dark:bg-gray-800">
         <div className="container flex flex-wrap justify-between items-center mx-auto">
-          <a href="/courses" className="flex items-center">
-            <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">
-              Learning courses
-            </span>
-          </a>
+          <div className="flex flex-row">
+            <div>
+              <a href="/courses" className="flex items-center">
+                <span className="self-center mr-3 text-xl font-semibold whitespace-nowrap dark:text-white">
+                  Learning courses
+                </span>
+              </a>
+            </div>
+            <div className="h-fit my-auto">
+              <label
+                htmlFor="default-toggle"
+                className="flex relative items-center cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  value=""
+                  id="default-toggle"
+                  className="sr-only peer"
+                  checked={isTeacher}
+                  onClick={statusToggle}
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                <span className="ml-3 my-auto text-sm font-medium text-gray-900 dark:text-gray-300">
+                  {isTeacher ? 'Преподаватель' : 'Студент'}
+                </span>
+              </label>
+            </div>
+          </div>
           <button
             data-collapse-toggle="mobile-menu"
             type="button"
